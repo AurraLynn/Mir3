@@ -1,0 +1,517 @@
+/* 基础重置 */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+    font-family: "Microsoft YaHei", "PingFang SC", Arial, sans-serif; 
+    background: #000; 
+    color: #fff; 
+    overflow-x: hidden; 
+    -webkit-font-smoothing: antialiased;
+}
+a { text-decoration: none; color: inherit; }
+
+/* 1. 背景容器与融合Logo样式 */
+.background-container { 
+    position: relative; 
+    width: 100%; 
+    height: 100vh; 
+    overflow: hidden; 
+}
+.video-background { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+}
+.video-overlay { 
+    position: absolute; 
+    bottom: 0; 
+    width: 100%; 
+    height: 200px; 
+    background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,1)); 
+    z-index: 1; 
+}
+/* Logo：放大100%+不可交互+融合背景 */
+.logo-merge { 
+    position: absolute; 
+    top: 30px;
+    left: 30px;
+    z-index: 2; 
+    width: 100%;
+    max-width: 220px; 
+    height: auto; 
+    opacity: 0.9; 
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.5)); 
+    transform: translateY(0); 
+    transition: transform 0.3s ease; 
+    pointer-events: none; 
+    user-select: none; 
+    -webkit-user-drag: none; 
+}
+body:hover .logo-merge { transform: translateY(-5px); }
+
+/* 2. 主内容区样式 */
+.content-overlay { 
+    position: absolute; 
+    top: 75%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    width: 100%; 
+    max-width: 1200px; 
+    text-align: center; 
+    z-index: 3; 
+}
+.game-title { 
+    font-size: 3em; 
+    margin-bottom: 15px; 
+    font-weight: bold; 
+    text-shadow: 0 0 10px #fff, 0 0 20px #aaa; 
+    animation: fadeInOut 4s ease-in-out infinite alternate; 
+}
+@keyframes fadeInOut {
+    from { opacity: 0.8; text-shadow: 0 0 5px #fff, 0 0 10px #aaa; }
+    to { opacity: 1; text-shadow: 0 0 15px #fff, 0 0 30px #aaa, 0 0 40px #ffd700; }
+}
+.game-intro { 
+    font-size: 1.2em; 
+    margin-bottom: 30px; 
+    text-shadow: 0 0 10px rgba(0,0,0,0.7); 
+}
+
+/* 3. 卡片容器样式 */
+.features { 
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 30px; 
+    margin-bottom: 60px; 
+}
+
+/* 4. 职业卡片样式（带摆动效果） */
+.class-card { 
+    position: relative; 
+    width: 240px;
+    height: 340px;
+    border-radius: 10px;
+    overflow: hidden; 
+    cursor: pointer; 
+    box-shadow: 0 0 10px rgba(255,255,255,0.4); 
+    transition: transform 0.3s, box-shadow 0.3s; 
+    animation: gentleSwing 5s ease-in-out infinite alternate; 
+}
+.class-card img { width: 100%; height: 100%; object-fit: cover; }
+.class-card .class-name { 
+    position: absolute; 
+    bottom: 0; 
+    width: 100%; 
+    font-size: 1.3em; 
+    font-weight: bold; 
+    text-align: center; 
+    padding: 5px 0; 
+    background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0)); 
+    color: #fff; 
+    text-shadow: 0 0 5px #fff, 0 0 10px #aaa; 
+}
+.class-card:hover { 
+    transform: translateY(-15px) scale(1.05); 
+    box-shadow: 0 0 20px rgba(255,255,255,0.8); 
+    animation: swing 0.5s ease-in-out; 
+}
+/* 摆动动画 */
+@keyframes gentleSwing { 0% { transform: rotate(0deg); } 50% { transform: rotate(2deg); } 100% { transform: rotate(-2deg); } }
+@keyframes swing { 0% { transform: translateY(-15px) scale(1.05) rotate(0deg); } 25% { transform: translateY(-15px) scale(1.05) rotate(3deg); } 50% { transform: translateY(-15px) scale(1.05) rotate(0deg); } 75% { transform: translateY(-15px) scale(1.05) rotate(-3deg); } 100% { transform: translateY(-15px) scale(1.05) rotate(0deg); } }
+
+/* 5. 下载卡片样式（无气泡） */
+.download-card { 
+    position: relative; 
+    width: 240px;
+    height: 340px;
+    border-radius: 10px; 
+    overflow: hidden; 
+    cursor: pointer; 
+    box-shadow: 0 0 10px rgba(255,255,255,0.4); 
+    transition: transform 0.3s, box-shadow 0.3s; 
+    background: linear-gradient(135deg, rgba(17,17,17,0.9), rgba(34,34,34,0.9)), 
+                url('这里是下载卡片背景/现在以取消😊');
+    background-size: cover; 
+    background-position: center; 
+    background-blend-mode: overlay;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    padding: 20px; 
+    text-align: center;
+    animation: gentleSwing 5s ease-in-out infinite alternate; 
+}
+.download-card:hover { 
+    transform: translateY(-15px) scale(1.05); 
+    box-shadow: 0 0 20px rgba(255,255,255,0.8); 
+    animation: swing 0.5s ease-in-out; 
+}
+.download-card .icon { 
+    font-size: 4em; 
+    margin-bottom: 20px; 
+    background: linear-gradient(45deg, #ff0055, #00ffff); 
+    background-clip: text; 
+    -webkit-background-clip: text; 
+    color: transparent; 
+}
+.download-card .title { 
+    font-size: 1.5em; 
+    margin-bottom: 15px; 
+    color: #fff; 
+}
+.download-tip { 
+    font-size: 1em; 
+    color: #ffd700; 
+    text-shadow: 0 0 8px rgba(255,215,0,0.6); 
+    margin-top: 20px; 
+    line-height: 1.5; 
+}
+.download-btn-container { display: none; }
+
+/* 6. 悬浮通知样式 */
+.notification-modal { 
+    display: block; 
+    position: fixed; 
+    top: 30px; 
+    right: 30px; 
+    width: 300px; 
+    max-height: 250px; 
+    background: #111; 
+    border-radius: 10px; 
+    padding: 15px; 
+    box-shadow: 0 0 20px rgba(255,255,255,0.5); 
+    z-index: 99; 
+    border: 1px solid rgba(255,215,0,0.5); 
+    overflow-y: auto; 
+}
+.notification-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 10px; 
+}
+.notification-title { color: #ffcc00; font-size: 1.1em; }
+.notification-close { color: #ff4444; cursor: pointer; font-size: 1.2em; transition: color 0.3s; }
+.notification-close:hover { color: #fff; }
+.notification-content { color: #ddd; line-height: 1.6; }
+
+/* 7. 职业弹窗样式 */
+.modal { 
+    display: none; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0,0,0,0.9); 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 20; 
+}
+.modal-content { 
+    background: #111; 
+    padding: 40px; 
+    border-radius: 12px; 
+    width: 400px; 
+    max-width: 90%; 
+    height: 520px; 
+    color: #fff; 
+    text-align: center; 
+    background-size: cover; 
+    background-position: center; 
+    box-shadow: 0 0 30px rgba(255,255,255,0.7); 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+}
+.modal-content h2 { 
+    font-size: 2.2em; 
+    font-weight: bold; 
+    margin-bottom: 15px; 
+    text-shadow: 0 0 10px #fff, 0 0 20px #aaa; 
+    animation: fadeInOut 3s ease-in-out infinite alternate; 
+}
+.modal-content .modal-subtitle { 
+    font-size: 1.3em; 
+    color: #ffd700; 
+    margin-bottom: 20px; 
+    text-shadow: 0 0 5px rgba(255,215,0,0.8); 
+}
+.modal-content p { 
+    width: 100%; 
+    font-size: 1.1em; 
+    padding: 20px; 
+    background: rgba(0,0,0,0.7); 
+    border-radius: 8px; 
+    box-shadow: 0 0 10px rgba(255,255,255,0.3); 
+    line-height: 1.6; 
+}
+.modal-close { 
+    position: absolute; 
+    top: 15px; 
+    right: 20px; 
+    font-size: 2em; 
+    cursor: pointer; 
+    color: #fff; 
+    transition: color 0.3s; 
+}
+.modal-close:hover { color: #ff4444; }
+
+/* 8. 新闻区域样式 */
+.news-section { 
+    width: 100%; 
+    background: linear-gradient(180deg,#000,#1a1a1a); 
+    padding: 60px 5%; 
+    position: relative; 
+    z-index: 4; 
+}
+.news-header { text-align: center; margin-bottom: 40px; }
+.news-title { 
+    font-size: 2.5em; 
+    background: linear-gradient(45deg,#ff0055,#00ffff); 
+    background-clip: text; 
+    -webkit-background-clip: text; 
+    color: transparent; 
+    text-shadow: 0 0 15px #fff; 
+    margin-bottom: 10px; 
+}
+.news-desc { font-size: 1.1em; color: #ddd; max-width: 800px; margin: 0 auto; }
+.news-cards { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 30px; 
+    max-width: 1400px; 
+    margin: 0 auto; 
+}
+.news-card { 
+    background: linear-gradient(135deg,#111,#222); 
+    border-radius: 12px; 
+    overflow: hidden; 
+    box-shadow: 0 0 20px rgba(255,255,255,0.2); 
+    transition: transform 0.3s; 
+    cursor: pointer; 
+    height: 400px; 
+    display: flex;
+    flex-direction: column; 
+}
+.news-card:hover { transform: translateY(-8px); }
+.news-card-img { width: 100%; height: 180px; object-fit: cover; }
+.news-card-content { padding: 20px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+.news-card-tag { 
+    display: inline-block; 
+    padding: 5px 12px; 
+    background: #ff0055; 
+    border-radius: 20px; 
+    font-size: 0.8em; 
+    margin-bottom: 10px; 
+    white-space: nowrap; 
+}
+.news-card-title { font-size: 1.4em; margin-bottom: 10px; color: #fff; }
+.news-card-text { 
+    font-size: 1em; 
+    color: #ddd; 
+    line-height: 1.6; 
+    margin-bottom: 15px; 
+    flex: 1; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    display: -webkit-box; 
+    -webkit-line-clamp: 3; 
+    -webkit-box-orient: vertical; 
+}
+.news-card-date { font-size: 0.9em; color: #888; text-align: right; }
+
+/* 9. 新闻弹窗样式 */
+.news-modal { 
+    display: none; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0,0,0,0.85); 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 30; 
+    backdrop-filter: blur(5px); 
+}
+.news-modal.active { display: flex; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+.news-modal-content { 
+    width: 70%; 
+    max-width: 900px; 
+    max-height: 80vh; 
+    background: linear-gradient(135deg,#111,#222); 
+    border-radius: 15px; 
+    padding: 30px; 
+    box-shadow: 0 0 30px rgba(255,255,255,0.6); 
+    border: 1px solid rgba(255,255,255,0.3); 
+    position: relative; 
+    overflow-y: auto; 
+}
+.news-modal-close { 
+    position: absolute; 
+    top: 15px; 
+    right: 15px; 
+    font-size: 1.5em; 
+    cursor: pointer; 
+    color: #fff; 
+    transition: color 0.3s; 
+}
+.news-modal-close:hover { color: #ff4444; }
+.news-modal-title { font-size: 2em; margin-bottom: 20px; color: #fff; text-align: center; }
+.news-modal-date { font-size: 1em; color: #888; text-align: center; margin-bottom: 30px; }
+.news-modal-content p { font-size: 1.1em; color: #ddd; line-height: 1.8; margin-bottom: 20px; }
+.news-modal-content strong { color: #ffd700; }
+
+/* 10. 下载弹窗样式 */
+.download-modal { 
+    display: none; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0,0,0,0.85); 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 40; 
+    backdrop-filter: blur(5px); 
+}
+.download-modal.active { display: flex; animation: fadeIn 0.3s ease; }
+.download-modal-content { 
+    width: 550px; 
+    max-width: 90vw; 
+    background: linear-gradient(135deg,#111,#222); 
+    border-radius: 15px; 
+    padding: 30px; 
+    box-shadow: 0 0 30px rgba(255,255,255,0.6); 
+    border: 1px solid rgba(255,255,255,0.3); 
+    position: relative; 
+}
+.download-modal-close { 
+    position: absolute; 
+    top: 15px; 
+    right: 15px; 
+    font-size: 1.5em; 
+    cursor: pointer; 
+    color: #fff; 
+    transition: color 0.3s; 
+}
+.download-modal-close:hover { color: #ff4444; }
+.download-modal-title { 
+    font-size: 2em; 
+    margin-bottom: 25px; 
+    text-align: center; 
+    background: linear-gradient(45deg,#ffcc00,#00ffff); 
+    background-clip: text; 
+    -webkit-background-clip:text; 
+    color: transparent; 
+    text-shadow: 0 0 10px #fff; 
+}
+.download-modal-info { margin-bottom: 25px; }
+.download-modal-info-row { 
+    display: flex; 
+    justify-content: space-between; 
+    padding: 12px 0; 
+    border-bottom: 1px solid rgba(255,255,255,0.1); 
+}
+.download-modal-info-label { color: #aaa; font-size: 1em; }
+.download-modal-info-value { font-weight: bold; font-size: 1.1em; color: #fff; }
+.update-content { 
+    background: rgba(30,30,30,0.8); 
+    border-radius: 8px; 
+    padding: 20px; 
+    margin-bottom: 25px; 
+}
+.update-content-title { 
+    font-size: 1.3em; 
+    margin-bottom: 15px; 
+    color: #00ffff; 
+    text-shadow: 0 0 8px #fff; 
+}
+.update-content-list { list-style: none; }
+.update-content-item { 
+    font-size: 1em; 
+    margin: 10px 0; 
+    padding-left: 10px; 
+    border-left: 3px solid #ff0055; 
+}
+.download-status { margin: 20px 0; display: none; }
+.download-progress-bar { 
+    height: 8px; 
+    background: #333; 
+    border-radius: 4px; 
+    overflow: hidden; 
+    margin: 10px 0; 
+}
+.progress-fill { 
+    height: 100%; 
+    background: linear-gradient(90deg, #ff0055, #00ffff); 
+    width: 0%; 
+    transition: width 0.3s ease; 
+}
+.status-text { text-align: center; font-size: 1.1em; color: #fff; margin-top: 10px; }
+.status-success { color: #4CAF50; }
+.modal-download-btn { 
+    width: 100%; 
+    padding: 15px; 
+    background: linear-gradient(45deg,#ff0055,#00ffff); 
+    border-radius: 8px; 
+    font-size: 1.2em; 
+    font-weight: bold; 
+    color: #fff; 
+    text-align: center; 
+    box-shadow: 0 0 15px rgba(255,255,255,0.4); 
+    transition: all 0.3s; 
+    display: inline-block; 
+    border: none; 
+    cursor: pointer; 
+}
+.modal-download-btn:hover { 
+    transform: translateY(-3px); 
+    box-shadow: 0 0 25px rgba(255,255,255,0.6); 
+    background: linear-gradient(45deg,#ff4444,#44ffff); 
+}
+
+/* 11. 底部样式 */
+.footer { 
+    width: 100%; 
+    padding: 20px 0; 
+    background: #111; 
+    text-align: center; 
+    color: #888; 
+    font-size: 0.9em; 
+    line-height: 1.6em; 
+    z-index: 5; 
+    position: relative; 
+}
+.footer a { color: #888; transition: color 0.3s; }
+.footer a:hover { color: #fff; }
+
+/* 12. 响应式适配 */
+@media (max-width: 1100px) {
+    .features { gap: 20px; }
+    .class-card, .download-card { width: 220px; height: 320px; }
+}
+@media (max-width: 900px) {
+    .features { justify-content: center; }
+    .class-card, .download-card { width: 200px; height: 300px; }
+    .news-card { height: 380px; }
+    .logo-merge { max-width: 180px; top: 30px; left: 30px; }
+}
+@media (max-width: 768px) {
+    .features { flex-direction: column; align-items: center; }
+    .class-card, .download-card { width: 85%; max-width: 300px; height: 340px; }
+    .news-card { width: 90%; margin: 0 auto; }
+    .notification-modal { width: 280px; top: 20px; right: 20px; }
+}
+@media (max-width: 600px) {
+    .game-title { font-size: 2.2em; }
+    .game-intro { font-size: 1em; padding: 0 20px; }
+    .modal-content { width: 90%; height: 480px; padding: 20px; }
+    .download-modal-title { font-size: 1.7em; }
+    .logo-merge { max-width: 150px; top: 20px; left: 20px; }
+}
