@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>梦想传奇3 - 经典回归，热血重燃</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- 粒子背景 -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <!-- 字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#D4AF37',  /* 金色 */
+                        secondary: '#8B0000',
+                        dark: '#000000',
+                        light: '#F5F5DC',
+                        accent: '#006400'
+                    },
+                    fontFamily: {
+                        fantasy: ['Cinzel', 'serif'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow { text-shadow: 2px 2px 4px rgba(0,0,0,.8); }
+            .text-glow { text-shadow: 0 0 10px rgba(212,175,55,.8); }
+            .bg-glass { background: rgba(0,0,0,.7); backdrop-filter: blur(10px); }
+            .bg-glass-light { background: rgba(0,0,0,.85); backdrop-filter: blur(10px); }
+            .news-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.9); z-index:100; overflow-y:auto; opacity:0; transition:opacity .3s ease; }
+            .news-modal.active { display:flex; opacity:1; }
+            .news-modal-content { background:rgba(0,0,0,.9); margin:5% auto; padding:20px; width:80%; max-width:800px; max-height:80vh; overflow-y:auto; border:1px solid #D4AF37; border-radius:8px; transform:translateY(20px); transition:transform .3s ease; }
+            .news-modal.active .news-modal-content { transform:translateY(0); }
+            .close-modal-btn { color:#D4AF37; float:right; font-size:28px; font-weight:bold; cursor:pointer; }
+            .close-modal-btn:hover { color:#fff; }
+            .screenshot-viewer { display:none; position:fixed; inset:0; background:rgba(0,0,0,.95); z-index:100; justify-content:center; align-items:center; opacity:0; transition:opacity .3s ease; }
+            .screenshot-viewer.active { display:flex; opacity:1; }
+            .screenshot-viewer-content { position:relative; max-width:90%; max-height:90%; }
+            .screenshot-viewer img { max-width:100%; max-height:90vh; object-fit:contain; border:2px solid #D4AF37; border-radius:4px; }
+            .close-viewer-btn { position:absolute; top:-40px; right:0; color:#D4AF37; font-size:30px; font-weight:bold; cursor:pointer; }
+            .close-viewer-btn:hover { color:#fff; }
+            .viewer-nav-btn { position:absolute; top:50%; transform:translateY(-50%); color:#D4AF37; font-size:40px; font-weight:bold; cursor:pointer; background:rgba(0,0,0,.5); width:50px; height:50px; display:flex; justify-content:center; align-items:center; border-radius:50%; z-index:10; }
+            .viewer-nav-btn:hover { color:#fff; background:rgba(0,0,0,.8); }
+            .prev-viewer-btn { left:-60px; }
+            .next-viewer-btn { right:-60px; }
+            .transition-transform { transition-property: transform; transition-timing-function:cubic-bezier(.4,0,.2,1); transition-duration:300ms; }
+            .hover-scale:hover { transform:scale(1.05); }
+            .scrollbar-hide::-webkit-scrollbar { display:none; }
+            .scrollbar-hide { -ms-overflow-style:none; scrollbar-width:none; }
+            .fade-in { opacity:0; transform:translateY(30px); transition: opacity .6s ease, transform .6s ease; }
+            .fade-in.active { opacity:1; transform:translateY(0); }
+            .mobile-menu { transform:translateX(-100%); transition:transform .3s ease-in-out; }
+            .mobile-menu.active { transform:translateX(0); }
+            .notification-slide-in { animation: slideIn 0.5s forwards; }
+            .notification-slide-out { animation: slideOut 0.5s forwards; }
+            @keyframes slideIn {
+                from { transform: translateY(-100%); }
+                to { transform: translateY(0); }
+            }
+            @keyframes slideOut {
+                from { transform: translateY(0); }
+                to { transform: translateY(-100%); }
+            }
+        }
+    </style>
+
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- 顶部通知区域 -->
+<div id="top-notification" class="top-notification">
+    <div class="notification-content">
+        <div class="notification-icon">
+            <i class="fa fa-bullhorn"></i>
+        </div>
+        <div class="notification-text">
+            🎉 <span>《梦想传奇3》11月15日正式公测！</span>
+            <a href="#download" class="notification-link">立即下载客户端，领取开服礼包！</a>
+        </div>
+        <button id="notification-close" class="notification-close">
+            <i class="fa fa-times"></i>
+        </button>
+    </div>
+</div>
+
+<!-- 顶部导航 -->
+<nav class="fixed top-0 left-0 w-full bg-transparent z-50 border-b border-primary/10">
+    <div class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center">
+                <img src="https://save.aura.us.kg/Mir3/Logo.png" alt="梦想传奇3" class="h-12 w-auto">
+                <h1 class="ml-3 text-2xl font-bold text-primary text-glow">梦想传奇3</h1>
+            </div>
+
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#home" class="nav-link text-light hover:text-primary transition-colors">首页</a>
+                <a href="#features" class="nav-link text-light hover:text-primary transition-colors">游戏特色</a>
+                <a href="#classes" class="nav-link text-light hover:text-primary transition-colors">职业介绍</a>
+                <a href="#story" class="nav-link text-light hover:text-primary transition-colors">游戏背景</a>
+                <a href="#screenshots" class="nav-link text-light hover:text-primary transition-colors">游戏截图</a>
+                <a href="#download" class="btn-primary px-6 py-2 rounded-md">立即下载</a>
+            </div>
+
+            <div class="md:hidden">
+                <button id="menu-toggle" class="text-light focus:outline-none">
+                    <i class="fa fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- 移动端菜单 -->
+<div id="mobile-menu" class="mobile-menu fixed top-0 left-0 h-full w-4/5 bg-dark z-50 p-6 border-r border-primary/30">
+    <div class="flex justify-between items-center mb-8">
+        <div class="flex items-center">
+            <img src="https://save.aura.us.kg/Mir3/Logo.png" alt="梦想传奇3" class="h-10 w-auto">
+            <h1 class="ml-2 text-xl font-bold text-primary">梦想传奇3</h1>
+        </div>
+        <button id="close-menu" class="text-light focus:outline-none">
+            <i class="fa fa-times text-2xl"></i>
+        </button>
+    </div>
+    <div class="flex flex-col space-y-6">
+        <a href="#home" class="mobile-nav-link text-light hover:text-primary transition-colors text-lg">首页</a>
+        <a href="#features" class="mobile-nav-link text-light hover:text-primary transition-colors text-lg">游戏特色</a>
+        <a href="#classes" class="mobile-nav-link text-light hover:text-primary transition-colors text-lg">职业介绍</a>
+        <a href="#story" class="mobile-nav-link text-light hover:text-primary transition-colors text-lg">游戏背景</a>
+        <a href="#screenshots" class="mobile-nav-link text-light hover:text-primary transition-colors text-lg">游戏截图</a>
+        <a href="#download" class="btn-primary px-6 py-3 rounded-md text-center mt-6">立即下载</a>
+    </div>
+</div>
+
+<!-- 英雄区域（仅视频） -->
+<section id="home" class="hero-section relative">
+    <video class="hero-video" autoplay loop muted playsinline>
+        <source src="https://save.aura.us.kg/Video/%E4%BC%A0%E5%A5%87%E8%83%8C%E6%99%AF%E8%A7%86%E9%A2%91.mp4" type="video/mp4">
+        您的浏览器不支持视频标签
+    </video>
+
+    <div id="particles-js"></div>
+
+    <div class="hero-content container mx-auto px-4 pb-20 text-center">
+        <h1 class="text-4xl md:text-6xl font-bold text-primary mb-6 text-glow">梦想传奇3</h1>
+        <p class="text-xl md:text-2xl text-light mb-8 max-w-3xl mx-auto">经典回归，热血重燃，重温玛法大陆的传奇岁月</p>
+        <div class="flex flex-col md:flex-row justify-center gap-4">
+            <a href="#download" class="btn-primary px-8 py-3 rounded-md text-lg">立即下载</a>
+            <a href="#features" class="btn-secondary px-8 py-3 rounded-md text-lg">了解更多</a>
+        </div>
+    </div>
+
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce z-40">
+        <a href="#features" class="text-primary text-3xl">
+            <i class="fa fa-angle-down"></i>
+        </a>
+    </div>
+</section>
+
+<!-- 新闻/通知 -->
+<section id="news" class="py-20 bg-dark">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl md:text-4xl font-bold text-primary mb-12 text-center">游戏新闻</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-glass p-6 rounded-lg fade-in news-card" data-news="news1">
+                <div class="text-primary text-2xl mb-4"><i class="fa fa-bullhorn"></i></div>
+                <span class="text-primary text-sm">2025-11-01</span>
+                <h3 class="text-xl font-bold text-primary my-3">梦想传奇3正式公测公告</h3>
+                <p class="text-light mb-4">亲爱的玩家们，梦想传奇3将于2025年11月15日正式开启全平台公测！感谢大家的支持与等待，我们已准备好丰富的开服活动和福利...</p>
+                <a href="#" class="text-primary hover:underline flex items-center read-more-btn" data-news="news1">阅读更多 <i class="fa fa-angle-right ml-2"></i></a>
+            </div>
+
+            <div class="bg-glass p-6 rounded-lg fade-in news-card" data-news="news2" style="transition-delay:.2s">
+                <div class="text-primary text-2xl mb-4"><i class="fa fa-gift"></i></div>
+                <span class="text-primary text-sm">2025-10-25</span>
+                <h3 class="text-xl font-bold text-primary my-3">开服活动抢先看</h3>
+                <p class="text-light mb-4">为庆祝梦想传奇3正式上线，我们准备了丰富的开服活动：冲级大赛、首杀奖励、行会争霸等，参与即有机会获得珍稀道具和限量周边...</p>
+                <a href="#" class="text-primary hover:underline flex items-center read-more-btn" data-news="news2">阅读更多 <i class="fa fa-angle-right ml-2"></i></a>
+            </div>
+
+            <div class="bg-glass p-6 rounded-lg fade-in news-card" data-news="news3" style="transition-delay:.4s">
+                <div class="text-primary text-2xl mb-4"><i class="fa fa-comments"></i></div>
+                <span class="text-primary text-sm">2025-10-20</span>
+                <h3 class="text-xl font-bold text-primary my-3">玩家见面会圆满结束</h3>
+                <p class="text-light mb-4">上周六，我们在北京举办了梦想传奇3玩家见面会，感谢所有到场玩家的热情参与。开发团队分享了游戏开发历程和未来更新计划...</p>
+                <a href="#" class="text-primary hover:underline flex items-center read-more-btn" data-news="news3">阅读更多 <i class="fa fa-angle-right ml-2"></i></a>
+            </div>
+        </div>
+
+        <div class="text-center mt-10">
+            <a href="#" class="btn-secondary px-8 py-3 rounded-md inline-block">查看更多新闻</a>
+        </div>
+    </div>
+</section>
+
+<!-- 新闻弹窗 -->
+<div id="news-modal" class="news-modal">
+    <div class="news-modal-content">
+        <span class="close-modal-btn">&times;</span>
+        <div id="news-content"></div>
+    </div>
+</div>
+
+<!-- 游戏特色 -->
+<section id="features" class="py-20 bg-dark">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl md:text-4xl font-bold text-primary mb-12 text-center">游戏特色</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="feature-card p-6 rounded-lg fade-in">
+                <div class="text-primary text-4xl mb-4"><i class="fa fa-refresh"></i></div>
+                <h3 class="text-xl font-bold text-primary mb-3">经典复刻</h3>
+                <p class="text-light">原汁原味复刻传奇3经典玩法，1.76版本精髓再现，带你重回玛法大陆的黄金时代。</p>
+            </div>
+
+            <div class="feature-card p-6 rounded-lg fade-in" style="transition-delay:.2s">
+                <div class="text-primary text-4xl mb-4"><i class="fa fa-users"></i></div>
+                <h3 class="text-xl font-bold text-primary mb-3">千人同屏</h3>
+                <p class="text-light">先进引擎技术支持，实现掌上千人攻城，激情团战即时PK，重现沙巴克辉煌。</p>
+            </div>
+
+            <div class="feature-card p-6 rounded-lg fade-in" style="transition-delay:.4s">
+                <div class="text-primary text-4xl mb-4"><i class="fa fa-bolt"></i></div>
+                <h3 class="text-xl font-bold text-primary mb-3">高爆率</h3>
+                <p class="text-light">装备道具直接掉落，非绑可交易，海量元宝漫天狂飞，福利到手领不停。</p>
+            </div>
+
+            <div class="feature-card p-6 rounded-lg fade-in" style="transition-delay:.6s">
+                <div class="text-primary text-4xl mb-4"><i class="fa fa-android"></i></div>
+                <h3 class="text-xl font-bold text-primary mb-3">三端互通</h3>
+                <p class="text-light">支持手机、平板和电脑三端互通，随时随地畅玩游戏，无缝切换游戏体验。</p>
+            </div>
+
+            <div class="feature-card p-6 rounded-lg fade-in" style="transition-delay:.8s">
+                <div class="text-primary text-4xl mb-4"><i class="fa fa-diamond"></i></div>
+                <h3 class="text-xl font-bold text-primary mb-3">七大元素系统</h3>
+                <p class="text-light">创新的七大元素系统，丰富职业体系和玩法，策略性更强，战斗体验更丰富。</p>
+            </div>
+
+            <div class="feature-card p-6 rounded-lg fade-in" style="transition-delay:1s">
+                <div class="text-primary text-4xl mb-4"><i class="fa fa-sliders"></i></div>
+                <h3 class="text-xl font-bold text-primary mb-3">自由PK</h3>
+                <p class="text-light">取消锁定机制和红名限制，允许在全区域自由进行即时对抗，享受战斗刺激。</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 职业介绍 -->
+<section id="classes" class="py-20 bg-dark relative overflow-hidden">
+    <div class="container mx-auto px-4 relative z-10">
+        <h2 class="text-3xl md:text-4xl font-bold text-primary mb-12 text-center">职业介绍</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- 战士 -->
+            <div class="class-card rounded-lg overflow-hidden fade-in">
+                <img src="https://save.aura.us.kg/Mir3/%E4%BC%A0%E5%A5%87%E5%A5%B3%E6%88%98.jpg" alt="战士" class="w-full h-64 object-cover">
+                <div class="p-4 bg-dark/80">
+                    <h3 class="text-xl font-bold text-primary mb-2">战士</h3>
+                    <p class="text-light mb-3 text-sm">近战暴力输出，高血量高防御，擅长正面硬刚。</p>
+                    <div class="flex justify-between text-xs text-light">
+                        <span>操作指数: ★★★</span>
+                        <span>PK指数: ★★★★★</span>
+                        <span>推荐指数: ★★★★★</span>
+                    </div>
+                </div>
+                <div class="class-overlay p-4">
+                    <h3 class="text-xl font-bold text-primary mb-3">战士</h3>
+                    <p class="text-light mb-4 text-center text-sm">以强大的体力和力量为基础，擅长近身战斗，是团队中的主力坦克和物理输出。</p>
+                    <h4 class="text-lg font-bold text-primary mb-2">核心技能</h4>
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <div class="text-center"><div class="text-primary text-xl mb-1"><i class="fa fa-fire"></i></div><span class="text-light text-xs">烈火剑法</span></div>
+                        <div class="text-center"><div class="text-primary text-xl mb-1"><i class="fa fa-crosshairs"></i></div><span class="text-light text-xs">刺杀剑术</span></div>
+                        <div class="text-center"><div class="text-primary text-xl mb-1"><i class="fa fa-arrows"></i></div><span class="text-light text-xs">野蛮冲撞</span></div>
+                        <div class="text-center"><div class="text-primary text-xl mb-1"><i class="fa fa-refresh"></i></div><span class="text-light text-xs">半月弯刀</span></div>
+                    </div>
+                    <p class="text-light text-xs">战士适合喜欢正面战斗、简单直接的玩家，操作门槛较低，但爆发力极强。</p>
+                </div>
+            </div>
+
+            <!-- 法师 -->
+            <div class="class-card rounded-lg overflow-hidden fade-in" style="transition-delay:.3s">
+                <img src="https://save.aura.us.kg/Mir3/%E4%BC%A0%E5%A5%87%E5%A5%B3%E6%B3%95.jpg" alt="法师" class="w-full h-64 object-cover">
+                <div class="p-4 bg-dark/80">
+                    <h3 class="text-xl font-bold text-primary mb-2">法师</h3>
+                    <p class="text-light mb-3 text-sm">远程魔法炮台，高爆发大范围，擅长群体攻击。</p>
+                    <div class="flex justify-between text-xs text-light">
+                        <span>操作指数: ★★★★</span>
+                        <span>PK指数: ★★★★</span>
+                        <span>推荐指数: ★★★★</span>
+                    </div>
+                </div>
+                <div class="class-overlay p-4">
+                    <h3 class="text-xl font-bold text-primary mb-3">法师</h3>
+                    <p class="text-light mb-4 text-center text-sm">掌握强大的元素魔法，擅长远程攻击和范围伤害，是团队中的主要输出者。</p>
+                    <h4 class="text-lg font-bold text-primary mb-2">核心技能</h4>
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <div class="text-center"><div class="text-primary text-xl mb-1"><i class="fa fa-bolt"></i></div><span class="text-light text-xs">雷电术</span></div>
+                        <div class="text-center"><div class="text-primary text-xl mb-1"><i class="fa fa-fire"></i></div><span class="text-light text-xs">火墙术</span></div>
+                        <div class="text-center"><div class="text-primary text-xl mb-1"><i class="fa fa-snowflake-o"></i></div><span class="text-light text-xs">冰咆哮</span></div>
+                        <div class="text-center"><div class="text-primary text-xl mb-1"><i class="fa fa-shield"></i></div><span class="text-light text-xs">魔法盾</span></div>
+                    </div>
+                    <p class="text-light text-xs">法师适合喜欢远程攻击、策略性强的玩家，操作要求较高，但输出能力极强。</p>
+                </div>
+            </div>
+
+            <!-- 道士 -->
+            <div class="class-card rounded-lg overflow-hidden fade-in" style="transition-delay:.6s">
+                <img src="https://save.aura.us.kg/Mir3/%E4%BC%A0%E5%A5%87%E5%A5%B3%E9%81%93.jpg" alt="道士" class="w-full h-64 object-cover">
+                <div class="p-4 bg-dark/80">
+                    <h3 class="text-xl font-bold text-primary mb-2">道士</h3>
+                    <p class="text-light mb-3 text-sm">全能辅助召唤，毒术治疗，擅长持续作战。</p>
+                    <div class="flex justify-between text-xs text-light">
+                        <span>操作指数: ★★★★</span>
+                        <span>PK指数: ★★★★</span>
+                        <span>推荐指数: ★★★★</span>
+                    </div>
+                </div>
+                <div class="class-overlay p-4">
+                    <h3 class="text-xl font-bold text-primary mb-3">道士</h3>
+                    <p class="text-light mb-4 text-center text-sm">掌握神秘的道术，擅长召唤、治疗和施毒，是团队中的全能辅助。</p>
+                    <h4 class="text-lg font-bold text-primary mb-2">核心技能</h4>
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <div class="text-center"><div class="text-primary text-xl mb-1"><i class="fa fa-paw"></i></div><span class="text-light text-xs">召唤神兽</span></div>
+                        <div class="text-center"><div class="text-primary text-xl mb-1"><i class="fa fa-flask"></i></div><span class="text-light text-xs">施毒术</span></div>
+                        <div class="text-center"><div class="text-primary text-xl mb-1"><i class="fa fa-heart"></i></div><span class="text-light text-xs">治愈术</span></div>
+                        <div class="text-center"><div class="text-primary text-xl mb-1"><i class="fa fa-eye-slash"></i></div><span class="text-light text-xs">隐身术</span></div>
+                    </div>
+                    <p class="text-light text-xs">道士适合喜欢策略性、辅助型的玩家，能打能奶能召唤，玩法多样。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 游戏背景 -->
+<section id="story" class="py-20" style="background:#000">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl md:text-4xl font-bold text-primary mb-12 text-center">游戏背景</h2>
+
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-glass p-8 rounded-lg fade-in">
+                <h3 class="text-2xl font-bold text-primary mb-6 text-center">玛法大陆的传奇</h3>
+                <div class="space-y-6 text-light">
+                    <p>在神秘而辽阔的玛法大陆上，一段壮丽的传奇史诗徐徐展开。这片土地曾经是一片祥和的乐土，人类、精灵、矮人等各个种族和平共处，共同创造了繁荣的文明。然而，随着时间的推移，贪婪与野心开始侵蚀人们的心灵，各个种族之间的矛盾日益激化，最终爆发了一场惨烈的战争。</p>
+                    <p>战争持续了数百年，无数生命在战火中消逝，曾经繁荣的文明也化为废墟。就在这时，一股来自异界的邪恶力量趁虚而入，他们被称为"黑暗势力"，以掠夺和毁灭为乐。黑暗势力的入侵让本已满目疮痍的玛法大陆雪上加霜，各个种族面临着前所未有的危机。</p>
+                    <p>在这危急存亡的时刻，一位名叫"龙卫"的勇士挺身而出。他凭借着超凡的勇气和智慧，团结了各个种族的力量，共同对抗黑暗势力。经过数十年的艰苦战斗，龙卫最终成功地将黑暗势力的首领封印在玛法大陆的深处，为这片土地带来了暂时的和平。</p>
+                    <p>然而，和平并没有持续太久。随着时间的推移，封印的力量逐渐减弱，黑暗势力再次蠢蠢欲动。与此同时，玛法大陆上各个种族之间的矛盾也再次浮现，新的冲突一触即发。</p>
+                    <p>就在这时，一股新的力量崛起了。他们被称为"冒险者"，来自各个种族，拥有着不同的天赋和技能。这些冒险者们意识到，只有团结一心，才能真正守护玛法大陆的和平。于是，他们组成了一个个冒险团队，踏上了探索未知、对抗黑暗的征程。</p>
+                    <p>玩家将扮演一名刚刚踏入玛法大陆的冒险者，通过不断地战斗和探索，提升自己的实力，解锁新的技能和装备。在这个过程中，玩家将会遇到各种各样的挑战和机遇，结交志同道合的伙伴，共同书写属于自己的传奇故事。</p>
+                    <p>玛法大陆的未来掌握在每一位冒险者的手中。你准备好了吗？</p>
+                </div>
+            </div>
+
+            <div class="mt-12 bg-glass p-8 rounded-lg fade-in" style="transition-delay:.3s">
+                <h3 class="text-2xl font-bold text-primary mb-6 text-center">神舰的传说</h3>
+                <div class="space-y-6 text-light">
+                    <p>在《传奇3》的世界中，神舰是一种充满神秘和传奇故事的独特存在。这些巨大的飞行船只据说由远古文明建造，拥有着超越时代的科技和魔法力量。</p>
+                    <p>神舰的历史可以追溯到数千年前，当时玛法大陆正处于一个高度发达的黄金时代。那时的人类拥有着强大的魔法和科技，他们建造了许多巨大的神舰，用于探索宇宙和保卫家园。然而，随着一场突如其来的灾难，这个黄金时代戛然而止，大部分的神舰也在这场灾难中损毁或失踪。</p>
+                    <p>如今，只有少数几艘神舰得以保存下来，散落在玛法大陆的各个角落。这些神舰被视为神圣的存在，拥有着强大的力量和神秘的宝藏。许多冒险者都渴望能够找到这些神舰，获取其中的宝藏和秘密。</p>
+                    <p>然而，神舰并不是那么容易就能找到的。它们通常隐藏在偏远的地方，或者被强大的魔法和科技保护着。即使找到了神舰，也需要克服许多艰难险阻才能进入其中。</p>
+                    <p>在《梦想传奇3》中，玩家将有机会探索这些神秘的神舰，解开它们的秘密，获取强大的装备和技能。同时，玩家也将面对神舰中隐藏的危险和挑战，需要运用自己的智慧和勇气才能成功。</p>
+                    <p>神舰的传说还在继续，新的故事等待着每一位勇敢的冒险者去书写。你准备好踏上这段神秘的旅程了吗？</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 游戏截图 -->
+<section id="screenshots" class="py-20 bg-dark">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl md:text-4xl font-bold text-primary mb-12 text-center">游戏截图</h2>
+
+        <div class="flex flex-wrap justify-center gap-4 mb-8">
+            <button class="screenshot-filter-btn active px-4 py-2 rounded-full bg-primary text-dark font-bold transition-all hover:bg-primary/80" data-filter="all">全部</button>
+            <button class="screenshot-filter-btn px-4 py-2 rounded-full bg-dark/50 text-light font-bold transition-all hover:bg-primary hover:text-dark" data-filter="scenery">游戏场景</button>
+            <button class="screenshot-filter-btn px-4 py-2 rounded-full bg-dark/50 text-light font-bold transition-all hover:bg-primary hover:text-dark" data-filter="combat">战斗画面</button>
+            <button class="screenshot-filter-btn px-4 py-2 rounded-full bg-dark/50 text-light font-bold transition-all hover:bg-primary hover:text-dark" data-filter="character">角色展示</button>
+        </div>
+
+        <div class="screenshot-grid">
+            <div class="screenshot-item" data-index="0" data-category="scenery">
+                <img src="https://save.aura.us.kg/Mir3/%E4%BC%A0%E5%A5%87%E8%83%8C%E6%99%AF7.png" alt="游戏场景 - 神秘山谷">
+                <div class="screenshot-caption">游戏场景 - 神秘山谷</div>
+            </div>
+            <div class="screenshot-item" data-index="1" data-category="scenery">
+                <img src="https://save.aura.us.kg/Mir3/%E4%BC%A0%E5%A5%87%E8%83%8C%E6%99%AF6.png" alt="游戏场景 - 古老神殿">
+                <div class="screenshot-caption">游戏场景 - 古老神殿</div>
+            </div>
+            <div class="screenshot-item" data-index="2" data-category="combat">
+                <img src="https://save.aura.us.kg/Mir3/%E4%BC%A0%E5%A5%87%E8%83%8C%E6%99%AF5.png" alt="战斗画面 - 群体战斗">
+                <div class="screenshot-caption">战斗画面 - 群体战斗</div>
+            </div>
+            <div class="screenshot-item" data-index="3" data-category="character">
+                <img src="https://save.aura.us.kg/Mir3/%E4%BC%A0%E5%A5%87%E8%83%8C%E6%99%AF4.jpg" alt="角色展示 - 战士">
+                <div class="screenshot-caption">角色展示 - 战士</div>
+            </div>
+            <div class="screenshot-item" data-index="4" data-category="character">
+                <img src="https://save.aura.us.kg/Mir3/%E4%BC%A0%E5%A5%87%E8%83%8C%E6%99%AF3.jpg" alt="角色展示 - 法师">
+                <div class="screenshot-caption">角色展示 - 法师</div>
+            </div>
+            <div class="screenshot-item" data-index="5" data-category="combat">
+                <img src="https://save.aura.us.kg/Mir3/%E4%BC%A0%E5%A5%87%E8%83%8C%E6%99%AF2.jpg" alt="战斗画面 - BOSS战">
+                <div class="screenshot-caption">战斗画面 - BOSS战</div>
+            </div>
+            <div class="screenshot-item" data-index="6" data-category="character">
+                <img src="https://save.aura.us.kg/Mir3/%E4%BC%A0%E5%A5%87%E8%83%8C%E6%99%AF1.jpg" alt="角色展示 - 道士">
+                <div class="screenshot-caption">角色展示 - 道士</div>
+            </div>
+        </div>
+
+        <p class="text-center text-light mt-8">点击图片查看大图</p>
+    </div>
+</section>
+
+<!-- 截图查看器 -->
+<div id="screenshot-viewer" class="screenshot-viewer">
+    <div class="screenshot-viewer-content">
+        <span class="close-viewer-btn">&times;</span>
+        <span class="prev-viewer-btn viewer-nav-btn">&lsaquo;</span>
+        <span class="next-viewer-btn viewer-nav-btn">&rsaquo;</span>
+        <img id="viewer-image" src="" alt="游戏截图大图">
+    </div>
+</div>
+
+<!-- 下载区域 -->
+<section id="download" class="py-20" style="background:#000">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-primary mb-6">立即下载</h2>
+            <p class="text-light text-xl mb-12">加入梦想传奇3，重温经典，再创辉煌</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-glass p-8 rounded-lg fade-in">
+                    <div class="text-primary text-5xl mb-6"><i class="fa fa-desktop"></i></div>
+                    <h3 class="text-2xl font-bold text-primary mb-4">PC完整版</h3>
+                    <p class="text-light mb-6">支持Windows 7/8/10/11系统<br>文件大小: 1.62GB</p>
+                    <button id="download-btn-1" class="btn-primary px-8 py-3 rounded-md inline-block">
+                        <i class="fa fa-download mr-2"></i> 下载客户端
+                    </button>
+                </div>
+
+                <div class="bg-glass p-8 rounded-lg fade-in" style="transition-delay:.3s">
+                    <div class="text-primary text-5xl mb-6"><i class="fa fa-desktop"></i></div>
+                    <h3 class="text-2xl font-bold text-primary mb-4">PC精简版</h3>
+                    <p class="text-light mb-6">支持Windows 7/8/10/11系统<br>文件大小: 1.0GB</p>
+                    <button id="download-btn-2" class="btn-primary px-8 py-3 rounded-md inline-block">
+                        <i class="fa fa-download mr-2"></i> 下载客户端
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 下载弹窗 -->
+<div id="download-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center hidden">
+    <div class="bg-gray-100 p-8 rounded-lg max-w-md w-full mx-4 shadow-xl">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-primary">下载客户端</h3>
+            <button id="close-modal" class="text-gray-600 hover:text-primary focus:outline-none">
+                <i class="fa fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <div id="download-steps">
+            <!-- 服务器状态检查（约3秒） -->
+            <div id="step-server-check" class="download-step">
+                <div class="text-center mb-6">
+                    <div class="inline-block p-4 rounded-full bg-primary/20 text-primary text-4xl mb-4">
+                        <i class="fa fa-server"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">服务器状态检查</h4>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-md">
+                            <span class="text-gray-700">主服务器</span>
+                            <span id="main-server-status" class="flex items-center">
+                <i class="fa fa-circle-o-notch fa-spin mr-2 text-gray-500"></i>
+                <span class="text-gray-500">检查中...</span>
+              </span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-md">
+                            <span class="text-gray-700">下载服务器</span>
+                            <span id="download-server-status" class="flex items-center">
+                <i class="fa fa-circle-o-notch fa-spin mr-2 text-gray-500"></i>
+                <span class="text-gray-500">检查中...</span>
+              </span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-md">
+                            <span class="text-gray-700">网络连接</span>
+                            <span id="network-status" class="flex items-center">
+                <i class="fa fa-circle-o-notch fa-spin mr-2 text-gray-500"></i>
+                <span class="text-gray-500">检查中...</span>
+              </span>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div id="server-check-progress" class="h-full bg-primary" style="width:0%"></div>
+                        </div>
+                        <p id="server-check-message" class="text-gray-600 mt-2 text-sm">正在检查服务器状态...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 文件信息校验（约3秒） -->
+            <div id="step-file-validation" class="download-step hidden">
+                <div class="text-center mb-6">
+                    <div class="inline-block p-4 rounded-full bg-primary/20 text-primary text-4xl mb-4">
+                        <i class="fa fa-check-square-o"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">文件信息校验</h4>
+                    <p class="text-gray-600 mb-4" id="validation-file-name">正在获取PC完整版信息...</p>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-md">
+                            <span class="text-gray-700">文件大小</span>
+                            <span id="validation-file-size" class="text-gray-500">获取中...</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-md">
+                            <span class="text-gray-700">MD5校验</span>
+                            <span id="validation-file-md5" class="text-gray-500">计算中...</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-md">
+                            <span class="text-gray-700">文件版本</span>
+                            <span id="validation-file-version" class="text-gray-500">获取中...</span>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div id="validation-progress" class="h-full bg-primary" style="width:0%"></div>
+                        </div>
+                        <p id="validation-message" class="text-gray-600 mt-2 text-sm">正在校验文件信息...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 正在下载 -->
+            <div id="step-downloading" class="download-step hidden">
+                <div class="text-center mb-6">
+                    <div class="inline-block p-4 rounded-full bg-primary/20 text-primary text-4xl mb-4">
+                        <i class="fa fa-download"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">正在下载</h4>
+                    <p class="text-gray-600">下载已开始，请在浏览器的下载栏中查看下载进度</p>
+                    <div class="mt-6">
+                        <button id="open-folder-btn" class="bg-gray-200 text-gray-800 px-6 py-3 rounded-md font-bold hover:bg-gray-300 transition-colors w-full">
+                            <i class="fa fa-folder-open mr-2"></i> 查看下载文件夹
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 错误提示 -->
+            <div id="step-error" class="download-step hidden">
+                <div class="text-center mb-6">
+                    <div class="inline-block p-4 rounded-full bg-red-100 text-red-600 text-4xl mb-4">
+                        <i class="fa fa-exclamation-circle"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">下载失败</h4>
+                    <p class="text-gray-600 mb-4" id="error-message">服务器连接失败，请稍后再试</p>
+                    <div class="mt-6">
+                        <button id="retry-download" class="bg-primary text-white px-6 py-3 rounded-md font-bold hover:bg-primary/90 transition-colors">
+                            <i class="fa fa-refresh mr-2"></i> 重试
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- 页脚 -->
+<footer class="bg-black py-8 border-t border-primary/30">
+    <div class="container mx-auto px-4">
+        <div class="text-center">
+            <p class="text-light">© 2025 梦想传奇3 版权所有 | 梦想运营团队</p>
+            <p class="text-light mt-4 text-sm">本游戏适合16岁以上玩家进入 | 抵制不良游戏 拒绝盗版游戏 | 注意自我保护 谨防受骗上当 | 适度游戏益脑 沉迷游戏伤身 | 合理安排时间 享受健康生活</p>
+        </div>
+    </div>
+</footer>
+
+<!-- 返回顶部按钮 -->
+<button id="back-to-top" class="fixed bottom-8 right-8 bg-primary text-dark p-3 rounded-full opacity-0 invisible transition-all duration-300 z-50">
+    <i class="fa fa-arrow-up"></i>
+</button>
+
+<!-- JavaScript 文件 -->
+<script src="news.js"></script>
+<script src="screenshot-viewer.js"></script>
+<script src="download.js"></script>
+<script src="main.js"></script>
+
+</body>
+</html>
