@@ -827,9 +827,9 @@
                     <!-- 按钮区：保留 download-btn-1 / 2 功能 -->
                     <div class="space-y-3">
                         <button
-                                id="download-btn-1"
-                                class="group relative w-full inline-flex items-center justify-center px-8 py-4 rounded-xl bg-gradient-to-r from-red-700 via-primary to-red-700 font-bold text-base md:text-lg text-black shadow-lg hover:shadow-2xl transform hover:-translate-y-[2px] transition-all duration-300 overflow-hidden"
-                                style="font-family:'Cinzel',serif;"
+                            id="download-btn-1"
+                            class="group relative w-full inline-flex items-center justify-center px-8 py-4 rounded-xl bg-gradient-to-r from-red-700 via-primary to-red-700 font-bold text-base md:text-lg text-black shadow-lg hover:shadow-2xl transform hover:-translate-y-[2px] transition-all duration-300 overflow-hidden"
+                            style="font-family:'Cinzel',serif;"
                         >
                             <span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-700 pointer-events-none"></span>
                             <i class="fa fa-download mr-3 text-lg md:text-xl"></i>
@@ -837,8 +837,8 @@
                         </button>
 
                         <button
-                                id="download-btn-2"
-                                class="w-full inline-flex items-center justify-center px-6 py-3 rounded-xl border border-primary/50 bg-black/70 text-primary text-sm font-semibold hover:bg-primary/10 hover:text-light transition-all duration-300"
+                            id="download-btn-2"
+                            class="w-full inline-flex items-center justify-center px-6 py-3 rounded-xl border border-primary/50 bg-black/70 text-primary text-sm font-semibold hover:bg-primary/10 hover:text-light transition-all duration-300"
                         >
                             <i class="fa fa-exchange mr-2"></i>
                             备用下载通道（同一安装包）
@@ -919,6 +919,123 @@
     </div>
 </section>
 
+<!-- 下载弹窗 -->
+<div id="download-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center hidden">
+    <div class="bg-gray-100 p-8 rounded-lg max-w-md w-full mx-4 shadow-xl">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-primary">下载客户端</h3>
+            <button id="close-modal" class="text-gray-600 hover:text-primary focus:outline-none">
+                <i class="fa fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <div id="download-steps">
+            <!-- 服务器状态检查（约3秒） -->
+            <div id="step-server-check" class="download-step">
+                <div class="text-center mb-6">
+                    <div class="inline-block p-4 rounded-full bg-primary/20 text-primary text-4xl mb-4">
+                        <i class="fa fa-server"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">服务器状态检查</h4>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-md">
+                            <span class="text-gray-700">主服务器</span>
+                            <span id="main-server-status" class="flex items-center">
+                                <i class="fa fa-circle-o-notch fa-spin mr-2 text-gray-500"></i>
+                                <span class="text-gray-500">检查中...</span>
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-md">
+                            <span class="text-gray-700">下载服务器</span>
+                            <span id="download-server-status" class="flex items-center">
+                                <i class="fa fa-circle-o-notch fa-spin mr-2 text-gray-500"></i>
+                                <span class="text-gray-500">检查中...</span>
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-md">
+                            <span class="text-gray-700">网络连接</span>
+                            <span id="network-status" class="flex items-center">
+                                <i class="fa fa-circle-o-notch fa-spin mr-2 text-gray-500"></i>
+                                <span class="text-gray-500">检查中...</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div id="server-check-progress" class="h-full bg-primary" style="width:0%"></div>
+                        </div>
+                        <p id="server-check-message" class="text-gray-600 mt-2 text-sm">正在检查服务器状态...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 文件信息校验（约3秒） -->
+            <div id="step-file-validation" class="download-step hidden">
+                <div class="text-center mb-6">
+                    <div class="inline-block p-4 rounded-full bg-primary/20 text-primary text-4xl mb-4">
+                        <i class="fa fa-check-square-o"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">文件信息校验</h4>
+                    <p class="text-gray-600 mb-4" id="validation-file-name">正在获取PC完整版信息...</p>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-md">
+                            <span class="text-gray-700">文件大小</span>
+                            <span id="validation-file-size" class="text-gray-500">获取中...</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-md">
+                            <span class="text-gray-700">MD5校验</span>
+                            <span id="validation-file-md5" class="text-gray-500">计算中...</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-md">
+                            <span class="text-gray-700">文件版本</span>
+                            <span id="validation-file-version" class="text-gray-500">获取中...</span>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div id="validation-progress" class="h-full bg-primary" style="width:0%"></div>
+                        </div>
+                        <p id="validation-message" class="text-gray-600 mt-2 text-sm">正在校验文件信息...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 正在下载 -->
+            <div id="step-downloading" class="download-step hidden">
+                <div class="text-center mb-6">
+                    <div class="inline-block p-4 rounded-full bg-primary/20 text-primary text-4xl mb-4">
+                        <i class="fa fa-download"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">正在下载</h4>
+                    <p class="text-gray-600">下载已开始，请在浏览器的下载栏中查看下载进度</p>
+                    <div class="mt-6">
+                        <button id="open-folder-btn" class="bg-gray-200 text-gray-800 px-6 py-3 rounded-md font-bold hover:bg-gray-300 transition-colors w-full">
+                            <i class="fa fa-folder-open mr-2"></i> 查看下载文件夹
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 错误提示 -->
+            <div id="step-error" class="download-step hidden">
+                <div class="text-center mb-6">
+                    <div class="inline-block p-4 rounded-full bg-red-100 text-red-600 text-4xl mb-4">
+                        <i class="fa fa-exclamation-circle"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">下载失败</h4>
+                    <p class="text-gray-600 mb-4" id="error-message">服务器连接失败，请稍后再试</p>
+                    <div class="mt-6">
+                        <button id="retry-download" class="bg-primary text-white px-6 py-3 rounded-md font-bold hover:bg-primary/90 transition-colors">
+                            <i class="fa fa-refresh mr-2"></i> 重试
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <!-- 页脚 -->
 <footer class="bg-black py-8 border-t border-primary/30">
     <div class="container mx-auto px-4">
@@ -944,7 +1061,7 @@
         initSmoothScroll();
         initDownloadFunctionality();
         initNotification();
-        initCountdown();
+        initCountdown(); // ✅ 启用倒计时
     });
 
     // 顶部通知区域控制
@@ -1131,6 +1248,8 @@
         function hide(step){ step.classList.add('hidden'); }
         function reset(){
             hide(stepValidate); hide(stepDownloading); hide(stepError);
+            show(stepServer);
+
             mainServerStatus.innerHTML = '<i class="fa fa-circle-o-notch fa-spin mr-2 text-gray-500"></i><span class="text-gray-500">检查中...</span>';
             downloadServerStatus.innerHTML = '<i class="fa fa-circle-o-notch fa-spin mr-2 text-gray-500"></i><span class="text-gray-500">检查中...</span>';
             networkStatus.innerHTML = '<i class="fa fa-circle-o-notch fa-spin mr-2 text-gray-500"></i><span class="text-gray-500">检查中...</span>';
@@ -1217,16 +1336,20 @@
         });
 
         retryBtn.addEventListener('click', ()=>{
-            hide(stepValidate); hide(stepDownloading); hide(stepError);
-            show(stepServer); reset(); startServerCheck();
+            reset();
+            startServerCheck();
         });
 
         function openModal(){
-            modal.classList.remove('hidden'); reset(); show(stepServer); startServerCheck();
+            modal.classList.remove('hidden');
+            reset();
+            startServerCheck();
         }
         function closeModal(){ modal.classList.add('hidden'); }
 
-        closeModalBtn.addEventListener('click', closeModal);
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', closeModal);
+        }
         modal.addEventListener('click', e=>{ if(e.target===modal){ closeModal(); }});
         document.addEventListener('keydown', e=>{ if(e.key==='Escape' && !modal.classList.contains('hidden')) closeModal(); });
 
@@ -1250,7 +1373,7 @@
         const secondsEl = document.getElementById('countdown-seconds');
 
         if (!daysEl || !hoursEl || !minutesEl || !secondsEl) {
-            console.warn('倒计时元素未找到');
+            console.warn('倒计时元素缺失，initCountdown 未执行');
             return;
         }
 
@@ -1266,12 +1389,13 @@
                 secondsEl.textContent = '00';
 
                 // 添加已开服样式
-                daysEl.parentElement.innerHTML = `
-                    <div class="text-3xl font-bold text-green-500">已开服</div>
-                `;
-                hoursEl.parentElement.style.display = 'none';
-                minutesEl.parentElement.style.display = 'none';
-                secondsEl.parentElement.style.display = 'none';
+                const parent = daysEl.parentElement;
+                if (parent) {
+                    parent.innerHTML = '<div class="text-3xl font-bold text-green-500">已开服</div>';
+                }
+                if (hoursEl.parentElement) hoursEl.parentElement.style.display = 'none';
+                if (minutesEl.parentElement) minutesEl.parentElement.style.display = 'none';
+                if (secondsEl.parentElement) secondsEl.parentElement.style.display = 'none';
 
                 return;
             }
@@ -1288,17 +1412,11 @@
             minutesEl.textContent = minutes.toString().padStart(2, '0');
             secondsEl.textContent = seconds.toString().padStart(2, '0');
 
-            // 数字变化动画
-            daysEl.classList.add('countdown-change');
-            hoursEl.classList.add('countdown-change');
-            minutesEl.classList.add('countdown-change');
-            secondsEl.classList.add('countdown-change');
+            // 添加数字变化动画
+            [daysEl, hoursEl, minutesEl, secondsEl].forEach(el => el.classList.add('countdown-change'));
 
             setTimeout(() => {
-                daysEl.classList.remove('countdown-change');
-                hoursEl.classList.remove('countdown-change');
-                minutesEl.classList.remove('countdown-change');
-                secondsEl.classList.remove('countdown-change');
+                [daysEl, hoursEl, minutesEl, secondsEl].forEach(el => el.classList.remove('countdown-change'));
             }, 500);
         }
 
