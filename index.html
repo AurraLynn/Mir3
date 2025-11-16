@@ -21,7 +21,6 @@
     <!-- 字体 -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
 
-    <!-- Tailwind 配置 -->
     <script>
         tailwind.config = {
             theme: {
@@ -42,7 +41,6 @@
         }
     </script>
 
-    <!-- 自定义工具类 -->
     <style type="text/tailwindcss">
         @layer utilities {
             .text-shadow { text-shadow: 2px 2px 4px rgba(0,0,0,.8); }
@@ -83,11 +81,120 @@
                 from { transform: translateY(0); }
                 to { transform: translateY(-100%); }
             }
+            @keyframes countChange {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.2); text-shadow: 0 0 15px rgba(212,175,55,1); }
+                100% { transform: scale(1); }
+            }
+            .countdown-change {
+                animation: countChange 0.5s ease-out;
+            }
+            .animate-pulse-slow {
+                animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            }
         }
     </style>
 
-    <!-- 自定义样式 -->
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body{font-family:'Inter',sans-serif;background:#000;color:#F5F5DC;overflow-x:hidden}
+        h1,h2,h3,h4,h5,h6{font-family:'Cinzel',serif}
+
+        /* 顶部通知区域 */
+        .top-notification {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(90deg, #8B0000, #D4AF37);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            transform: translateY(-100%);
+            transition: transform 0.5s ease;
+        }
+        .top-notification.show {
+            transform: translateY(0);
+        }
+        .notification-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        .notification-icon {
+            font-size: 24px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .notification-text {
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
+        .notification-link {
+            color: #FFD700;
+            text-decoration: underline;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .notification-link:hover {
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+        .notification-close {
+            background: rgba(0, 0, 0, 0.3);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        .notification-close:hover {
+            background: rgba(0, 0, 0, 0.5);
+            transform: rotate(90deg);
+        }
+
+        /* 英雄区：仅视频，无遮罩、无图片叠加 */
+        .hero-section{height:100vh; position:relative; overflow:hidden; background:#000; padding-top:80px;}
+        .hero-video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0;}
+        #particles-js{position:absolute; inset:0; z-index:1;}
+        .hero-content{position:absolute; left:0; right:0; bottom:0; z-index:2;}
+
+        .feature-card{background:rgba(0,0,0,.8); border:1px solid #D4AF37; transition:all .3s ease;}
+        .feature-card:hover{transform:translateY(-10px); box-shadow:0 20px 25px -5px rgba(0,0,0,.8),0 10px 10px -5px rgba(0,0,0,.6);}
+
+        .class-card{position:relative; overflow:hidden; transition:all .3s ease;}
+        .class-overlay{position:absolute; inset:0; background:rgba(0,0,0,.8); display:flex; flex-direction:column; justify-content:center; align-items:center; opacity:0; transition:all .3s ease;}
+        .class-card:hover .class-overlay{opacity:1;}
+
+        .screenshot-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:4px;}
+        .screenshot-item{position:relative; overflow:hidden; aspect-ratio:16/9; cursor:pointer;}
+        .screenshot-item img{width:100%; height:100%; object-fit:cover; transition:transform .3s ease;}
+        .screenshot-item:hover img{transform:scale(1.05);}
+        .screenshot-item::after{content:''; position:absolute; inset:0; background:linear-gradient(to bottom,rgba(0,0,0,0) 60%,rgba(0,0,0,.8) 100%); opacity:0; transition:opacity .3s ease;}
+        .screenshot-item:hover::after{opacity:1;}
+        .screenshot-caption{position:absolute; bottom:0; left:0; width:100%; padding:16px; color:#fff; font-weight:bold; text-shadow:0 2px 4px rgba(0,0,0,.8); transform:translateY(100%); transition:transform .3s ease; z-index:10;}
+        .screenshot-item:hover .screenshot-caption{transform:translateY(0);}
+
+        .btn-primary{background:#D4AF37;color:#1A1A1A;font-weight:bold;transition:all .3s ease;}
+        .btn-primary:hover{background:#B8860B; transform:translateY(-2px); box-shadow:0 10px 15px -3px rgba(212,175,55,.3);}
+        .btn-secondary{background:#8B0000;color:#F5F5DC;font-weight:bold;transition:all .3s ease;}
+        .btn-secondary:hover{background:#690000; transform:translateY(-2px); box-shadow:0 10px 15px -3px rgba(139,0,0,.3);}
+    </style>
 </head>
 <body>
 
@@ -133,6 +240,23 @@
         </div>
     </div>
 </nav>
+
+<script>
+    window.addEventListener('scroll', function() {
+        const nav = document.querySelector('nav');
+        if (window.scrollY > 50) {
+            nav.classList.remove('bg-transparent');
+            nav.classList.add('bg-glass');
+            nav.classList.add('border-primary/30');
+            nav.classList.remove('border-primary/10');
+        } else {
+            nav.classList.add('bg-transparent');
+            nav.classList.remove('bg-glass');
+            nav.classList.remove('border-primary/30');
+            nav.classList.add('border-primary/10');
+        }
+    });
+</script>
 
 <!-- 移动端菜单 -->
 <div id="mobile-menu" class="mobile-menu fixed top-0 left-0 h-full w-4/5 bg-dark z-50 p-6 border-r border-primary/30">
@@ -225,6 +349,146 @@
     </div>
 </div>
 
+<script>
+    const newsData = {
+        news1: {
+            title: "梦想传奇3正式公测公告",
+            date: "2025-11-01",
+            icon: "bullhorn",
+            content: `
+        <p class="text-light mb-6">亲爱的玩家们：</p>
+        <p class="text-light mb-6">经过数月的精心准备和测试，我们非常高兴地宣布，《梦想传奇3》将于2025年11月15日上午10:00正式开启全平台公测！</p>
+        <p class="text-light mb-6">《梦想传奇3》是一款原汁原味复刻传奇3经典玩法的MMORPG游戏，我们致力于为玩家打造一个充满回忆又不失创新的游戏世界。在这次公测中，玩家将体验到：</p>
+        <ul class="list-disc pl-6 text-light mb-6 space-y-2">
+          <li>经典1.76版本玩法完美复刻</li>
+          <li>经典地图完美重现</li>
+          <li>公平竞技，无VIP系统</li>
+          <li>千人同屏，激情攻城</li>
+          <li>高爆率，装备道具直接掉落</li>
+        </ul>
+        <p class="text-light mb-6">为庆祝公测开启，我们准备了丰富的开服活动和福利：</p>
+        <ol class="list-decimal pl-6 text-light mb-6 space-y-2">
+          <li>开服七日登录奖励，每日登录即可领取珍稀道具</li>
+          <li>冲级大赛，等级排名前100的玩家将获得丰厚奖励</li>
+          <li>首杀奖励，首杀各大BOSS的玩家将获得专属称号和道具</li>
+          <li>行会争霸，开服第7天将开启首次沙巴克攻城战</li>
+        </ol>
+        <p class="text-light mb-6">我们深知，游戏的成长离不开玩家的支持和反馈。在公测期间，我们将持续关注玩家的意见和建议，不断优化游戏体验，为大家带来更好的《梦想传奇3》。</p>
+        <p class="text-light mb-6">11月15日，让我们相约玛法大陆，重温经典，再创辉煌！</p>
+        <p class="text-light">《梦想传奇3》运营团队</p>
+        <p class="text-light">2025年11月1日</p>
+      `
+        },
+        news2: {
+            title: "开服活动抢先看",
+            date: "2025-10-25",
+            icon: "gift",
+            content: `
+        <p class="text-light mb-6">亲爱的玩家们：</p>
+        <p class="text-light mb-6">《梦想传奇3》即将于11月15日正式公测，为感谢大家的支持与等待，我们准备了一系列丰富多彩的开服活动，让您在游戏中快速成长，畅享传奇乐趣！</p>
+        <h4 class="text-xl font-bold text-primary mb-4">活动一：七日登录豪礼</h4>
+        <p class="text-light mb-6">活动期间，每日登录游戏即可领取丰厚奖励：</p>
+        <ul class="list-disc pl-6 text-light mb-6 space-y-2">
+          <li>第一天：绑定元宝*1000，小瓶金创药*50</li>
+          <li>第二天：双倍经验卷轴*2，中瓶金创药*30</li>
+          <li>第三天：随机高级技能书*1，小瓶魔法药*50</li>
+          <li>第四天：强化石*10，中瓶魔法药*30</li>
+          <li>第五天：VIP体验卡（7天）*1，大瓶金创药*20</li>
+          <li>第六天：高级装备箱*1，大瓶魔法药*20</li>
+          <li>第七天：稀有坐骑（7天）*1，绑定元宝*2000</li>
+        </ul>
+        <h4 class="text-xl font-bold text-primary mb-4">活动二：冲级大赛</h4>
+        <p class="text-light mb-6">开服后15天内，等级排名前100的玩家将获得丰厚奖励：</p>
+        <ul class="list-disc pl-6 text-light mb-6 space-y-2">
+          <li>第1名：极品武器*1，元宝*10000，专属称号"等级之王"</li>
+          <li>第2-3名：高级武器*1，元宝*5000，专属称号"等级精英"</li>
+          <li>第4-10名：优质武器*1，元宝*3000</li>
+          <li>第11-50名：元宝*2000，强化石*50</li>
+          <li>第51-100名：元宝*1000，强化石*20</li>
+        </ul>
+        <h4 class="text-xl font-bold text-primary mb-4">活动三：首杀奖励</h4>
+        <p class="text-light mb-6">游戏内各大BOSS首次被击杀时，击杀队伍的所有成员将获得丰厚奖励：</p>
+        <ul class="list-disc pl-6 text-light mb-6 space-y-2">
+          <li>世界BOSS首杀：元宝*5000，高级装备箱*1</li>
+          <li>精英BOSS首杀：元宝*2000，优质装备箱*1</li>
+          <li>普通BOSS首杀：元宝*1000，强化石*30</li>
+        </ul>
+        <h4 class="text-xl font-bold text-primary mb-4">活动四：行会争霸</h4>
+        <p class="text-light mb-6">开服第7天将开启首次沙巴克攻城战，胜利的行会将获得丰厚奖励：</p>
+        <ul class="list-disc pl-6 text-light mb-6 space-y-2">
+          <li>行会会长：专属武器*1，元宝*10000，专属称号"沙巴克城主"</li>
+          <li>行会成员：元宝*2000，强化石*50</li>
+        </ul>
+        <p class="text-light mb-6">更多活动详情，请关注游戏内公告。我们期待与您一起，在《梦想传奇3》的世界中创造属于我们的传奇！</p>
+        <p class="text-light">《梦想传奇3》运营团队</p>
+        <p class="text-light">2025年10月25日</p>
+      `
+        },
+        news3: {
+            title: "玩家见面会圆满结束",
+            date: "2025-10-20",
+            icon: "comments",
+            content: `
+        <p class="text-light mb-6">亲爱的玩家们：</p>
+        <p class="text-light mb-6">上周六（10月18日），我们在北京成功举办了《梦想传奇3》玩家见面会，感谢所有到场玩家的热情参与和支持！</p>
+        <p class="text-light mb-6">本次见面会吸引了来自全国各地的近百名玩家代表参加，现场气氛热烈。开发团队与玩家们进行了深入的交流，分享了游戏的开发历程、特色玩法和未来更新计划。</p>
+        <h4 class="text-xl font-bold text-primary mb-4">见面会精彩回顾</h4>
+        <p class="text-light mb-6">1. 开发团队分享了《梦想传奇3》的开发理念和特色玩法，包括经典复刻、公平竞技环境、经典地图重现等。</p>
+        <p class="text-light mb-6">2. 现场展示了游戏的最新版本，玩家们亲身体验了游戏的操作和玩法，并提出了宝贵的意见和建议。</p>
+        <p class="text-light mb-6">3. 开发团队回答了玩家们关心的问题，包括游戏平衡性、职业特色、社交系统等。</p>
+        <p class="text-light mb-6">4. 现场举行了互动游戏和抽奖活动，送出了丰厚的周边礼品和游戏礼包。</p>
+        <h4 class="text-xl font-bold text-primary mb-4">玩家反馈与未来计划</h4>
+        <ul class="list-disc pl-6 text-light mb-6 space-y-2">
+          <li>优化游戏画面和特效，提升视觉体验</li>
+          <li>调整职业平衡性，确保各职业特色鲜明</li>
+          <li>丰富社交系统，增加更多互动玩法</li>
+          <li>优化任务系统，增加更多有趣的任务内容</li>
+          <li>加强反外挂措施，保障游戏公平性</li>
+        </ul>
+        <p class="text-light mb-6">我们计划在公测后每月推出一次大版本更新，不断丰富游戏内容，提升游戏体验。同时，我们也将定期举办线上线下活动，与玩家保持密切互动。</p>
+        <p class="text-light mb-6">再次感谢所有玩家的支持和反馈！《梦想传奇3》的成长离不开每一位玩家的参与和支持。我们将继续努力，为大家打造一个更加精彩的传奇世界！</p>
+        <p class="text-light">《梦想传奇3》开发团队</p>
+        <p class="text-light">2025年10月20日</p>
+      `
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const newsModal = document.getElementById('news-modal');
+        const newsContent = document.getElementById('news-content');
+        const closeModalBtn = document.querySelector('.close-modal-btn');
+
+        document.querySelectorAll('.read-more-btn').forEach(btn=>{
+            btn.addEventListener('click', e=>{
+                e.preventDefault();
+                const id = btn.getAttribute('data-news');
+                const n = newsData[id];
+                if(n){
+                    newsContent.innerHTML = `
+            <div class="text-primary text-3xl mb-6"><i class="fa fa-${n.icon}"></i></div>
+            <span class="text-primary text-sm">${n.date}</span>
+            <h3 class="text-2xl font-bold text-primary my-4">${n.title}</h3>
+            <div class="text-light">${n.content}</div>`;
+                    newsModal.classList.add('active');
+                    document.body.style.overflow='hidden';
+                }
+            });
+        });
+
+        closeModalBtn.addEventListener('click',()=>{
+            newsModal.classList.remove('active'); document.body.style.overflow='auto';
+        });
+        newsModal.addEventListener('click', e=>{
+            if(e.target===newsModal){ newsModal.classList.remove('active'); document.body.style.overflow='auto'; }
+        });
+        document.addEventListener('keydown', e=>{
+            if(e.key==='Escape' && newsModal.classList.contains('active')){
+                newsModal.classList.remove('active'); document.body.style.overflow='auto';
+            }
+        });
+    });
+</script>
+
 <!-- 游戏特色 -->
 <section id="features" class="py-20 bg-dark">
     <div class="container mx-auto px-4">
@@ -240,7 +504,7 @@
             <div class="feature-card p-6 rounded-lg fade-in" style="transition-delay:.2s">
                 <div class="text-primary text-4xl mb-4"><i class="fa fa-users"></i></div>
                 <h3 class="text-xl font-bold text-primary mb-3">千人同屏</h3>
-                <p class="text-light">先进引擎技术支持，实现掌上千人攻城，激情团战即时PK，重现沙巴克辉煌。</p>
+                <p class="text-light">先进引擎技术支持，实现千人攻城，激情团战即时PK，重现沙巴克辉煌。</p>
             </div>
 
             <div class="feature-card p-6 rounded-lg fade-in" style="transition-delay:.4s">
@@ -250,15 +514,15 @@
             </div>
 
             <div class="feature-card p-6 rounded-lg fade-in" style="transition-delay:.6s">
-                <div class="text-primary text-4xl mb-4"><i class="fa fa-android"></i></div>
-                <h3 class="text-xl font-bold text-primary mb-3">三端互通</h3>
-                <p class="text-light">支持手机、平板和电脑三端互通，随时随地畅玩游戏，无缝切换游戏体验。</p>
+                <div class="text-primary text-4xl mb-4"><i class="fa fa-shield"></i></div>
+                <h3 class="text-xl font-bold text-primary mb-3">公平竞技</h3>
+                <p class="text-light">无VIP系统，无商城道具，所有装备全靠打，真正实现公平竞技环境。</p>
             </div>
 
             <div class="feature-card p-6 rounded-lg fade-in" style="transition-delay:.8s">
-                <div class="text-primary text-4xl mb-4"><i class="fa fa-diamond"></i></div>
-                <h3 class="text-xl font-bold text-primary mb-3">七大元素系统</h3>
-                <p class="text-light">创新的七大元素系统，丰富职业体系和玩法，策略性更强，战斗体验更丰富。</p>
+                <div class="text-primary text-4xl mb-4"><i class="fa fa-map-signs"></i></div>
+                <h3 class="text-xl font-bold text-primary mb-3">经典地图</h3>
+                <p class="text-light">蜈蚣洞、猪洞、祖玛寺庙等经典地图完美重现，带你找回当年的游戏回忆。</p>
             </div>
 
             <div class="feature-card p-6 rounded-lg fade-in" style="transition-delay:1s">
@@ -448,158 +712,218 @@
     </div>
 </div>
 
-<!-- 下载区域 -->
-<section id="download" class="py-20" style="background:#000">
-    <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-3xl md:text-4xl font-bold text-primary mb-6">立即下载</h2>
-            <p class="text-light text-xl mb-12">加入梦想传奇3，重温经典，再创辉煌</p>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const screenshotItems = document.querySelectorAll('.screenshot-item');
+        const viewer = document.getElementById('screenshot-viewer');
+        const viewerImg = document.getElementById('viewer-image');
+        const closeBtn = document.querySelector('.close-viewer-btn');
+        const prevBtn = document.querySelector('.prev-viewer-btn');
+        const nextBtn = document.querySelector('.next-viewer-btn');
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-glass p-8 rounded-lg fade-in">
-                    <div class="text-primary text-5xl mb-6"><i class="fa fa-desktop"></i></div>
-                    <h3 class="text-2xl font-bold text-primary mb-4">PC完整版</h3>
-                    <p class="text-light mb-6">支持Windows 7/8/10/11系统<br>文件大小: 1.62GB</p>
-                    <button id="download-btn-1" class="btn-primary px-8 py-3 rounded-md inline-block">
-                        <i class="fa fa-download mr-2"></i> 下载客户端
-                    </button>
+        const screenshots = [];
+        screenshotItems.forEach(item=>{
+            const img = item.querySelector('img');
+            screenshots.push({src:img.src, alt:img.alt});
+        });
+
+        let current = 0;
+
+        function update() {
+            viewerImg.src = screenshots[current].src;
+            viewerImg.alt = screenshots[current].alt;
+        }
+
+        screenshotItems.forEach(item=>{
+            item.addEventListener('click', ()=>{
+                current = parseInt(item.getAttribute('data-index'));
+                update(); viewer.classList.add('active'); document.body.style.overflow='hidden';
+            });
+        });
+
+        closeBtn.addEventListener('click', ()=>{ viewer.classList.remove('active'); document.body.style.overflow='auto'; });
+        viewer.addEventListener('click', e=>{ if(e.target===viewer){ viewer.classList.remove('active'); document.body.style.overflow='auto'; }});
+        prevBtn.addEventListener('click', e=>{ e.stopPropagation(); current=(current-1+screenshots.length)%screenshots.length; update(); });
+        nextBtn.addEventListener('click', e=>{ e.stopPropagation(); current=(current+1)%screenshots.length; update(); });
+        document.addEventListener('keydown', e=>{
+            if(viewer.classList.contains('active')){
+                if(e.key==='Escape'){ viewer.classList.remove('active'); document.body.style.overflow='auto'; }
+                if(e.key==='ArrowLeft'){ current=(current-1+screenshots.length)%screenshots.length; update(); }
+                if(e.key==='ArrowRight'){ current=(current+1)%screenshots.length; update(); }
+            }
+        });
+
+        // 筛选
+        const filterBtns = document.querySelectorAll('.screenshot-filter-btn');
+        filterBtns.forEach(btn=>{
+            btn.addEventListener('click', ()=>{
+                filterBtns.forEach(b=>{ b.classList.remove('active','bg-primary','text-dark'); b.classList.add('bg-dark/50','text-light'); });
+                btn.classList.add('active','bg-primary','text-dark'); btn.classList.remove('bg-dark/50','text-light');
+                const filter = btn.getAttribute('data-filter');
+                document.querySelectorAll('.screenshot-item').forEach(it=>{
+                    it.style.display = (filter==='all' || it.getAttribute('data-category')===filter) ? 'block' : 'none';
+                });
+            });
+        });
+    });
+</script>
+
+<!-- 下载区域（简洁且大方） -->
+<section id="download" class="py-16 relative overflow-hidden bg-[#050509]">
+    <!-- 背景图 + 遮罩 -->
+    <div class="absolute inset-0 bg-[url('https://save.aura.us.kg/Mir3/%E4%BC%A0%E5%A5%87%E8%83%8C%E6%99%AF7.png')] bg-cover bg-center opacity-30"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/85 via-black/92 to-black"></div>
+
+    <div class="container mx-auto px-4 relative z-10">
+        <!-- 顶部标题 -->
+        <div class="max-w-3xl mx-auto text-center mb-10 fade-in">
+            <p class="inline-flex items-center px-3 py-1 rounded-full border border-primary/40 bg-black/60 text-[11px] text-primary tracking-[0.26em] uppercase">
+                <i class="fa fa-download mr-2"></i> OFFICIAL CLIENT
+            </p>
+            <h2 class="mt-4 text-3xl md:text-4xl font-bold text-primary text-glow" style="font-family:'Cinzel',serif;">
+                梦想传奇3 · PC 完整客户端
+            </h2>
+            <p class="mt-3 text-sm md:text-base text-light/80">
+                一键安装，畅享玛法大陆全部内容。建议在稳定网络环境下完成下载。
+            </p>
+        </div>
+
+        <!-- 主卡片：左右两栏 -->
+        <div class="max-w-5xl mx-auto bg-glass-light rounded-2xl border border-primary/35 shadow-2xl p-6 md:p-8 fade-in">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-center">
+                <!-- 左侧：下载信息 + 按钮 -->
+                <div class="space-y-6">
+                    <!-- 基本信息 -->
+                    <div>
+                        <div class="flex flex-wrap items-center gap-3 mb-4">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full bg-black/70 border border-primary/40 text-[11px] text-primary uppercase tracking-[0.2em]">
+                                PC 完整安装包
+                            </span>
+                            <span class="text-xs text-light/60">
+                                最近更新：<span class="text-primary font-semibold">2025-11-10</span>
+                            </span>
+                        </div>
+
+                        <h3 class="text-2xl md:text-3xl font-bold text-light mb-2">
+                            官方客户端安装程序
+                        </h3>
+                        <p class="text-sm text-light/75 mb-4">
+                            内含所有游戏资源及更新补丁，安装完成即可进入游戏。
+                        </p>
+
+                        <div class="flex flex-wrap gap-2 text-[11px] md:text-xs text-light/80">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full bg-black/70 border border-primary/30">
+                                <i class="fa fa-hdd-o mr-1"></i> 大小：约 3.2GB
+                            </span>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full bg-black/70 border border-primary/30">
+                                <i class="fa fa-code mr-1"></i> 版本：v1.0.2
+                            </span>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full bg-black/70 border border-primary/30">
+                                <i class="fa fa-windows mr-1"></i> Windows 7 / 8 / 10 / 11（64 位）
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- 按钮区：保留 download-btn-1 / 2 功能 -->
+                    <div class="space-y-3">
+                        <button
+                                id="download-btn-1"
+                                class="group relative w-full inline-flex items-center justify-center px-8 py-4 rounded-xl bg-gradient-to-r from-red-700 via-primary to-red-700 font-bold text-base md:text-lg text-black shadow-lg hover:shadow-2xl transform hover:-translate-y-[2px] transition-all duration-300 overflow-hidden"
+                                style="font-family:'Cinzel',serif;"
+                        >
+                            <span class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-700 pointer-events-none"></span>
+                            <i class="fa fa-download mr-3 text-lg md:text-xl"></i>
+                            立即下载客户端
+                        </button>
+
+                        <button
+                                id="download-btn-2"
+                                class="w-full inline-flex items-center justify-center px-6 py-3 rounded-xl border border-primary/50 bg-black/70 text-primary text-sm font-semibold hover:bg-primary/10 hover:text-light transition-all duration-300"
+                        >
+                            <i class="fa fa-exchange mr-2"></i>
+                            备用下载通道（同一安装包）
+                        </button>
+
+                        <p class="text-[11px] md:text-xs text-light/70 leading-relaxed">
+                            点击按钮后，将依次进行
+                            <span class="text-primary">服务器状态检查</span> 和
+                            <span class="text-primary">文件信息校验</span>，
+                            通过后会自动调用浏览器下载。请在浏览器的下载列表中查看进度。
+                        </p>
+                    </div>
                 </div>
 
-                <div class="bg-glass p-8 rounded-lg fade-in" style="transition-delay:.3s">
-                    <div class="text-primary text-5xl mb-6"><i class="fa fa-desktop"></i></div>
-                    <h3 class="text-2xl font-bold text-primary mb-4">PC精简版</h3>
-                    <p class="text-light mb-6">支持Windows 7/8/10/11系统<br>文件大小: 1.0GB</p>
-                    <button id="download-btn-2" class="btn-primary px-8 py-3 rounded-md inline-block">
-                        <i class="fa fa-download mr-2"></i> 下载客户端
-                    </button>
+                <!-- 右侧：倒计时 + 简要提示（保留倒计时功能所需 ID） -->
+                <div class="space-y-4">
+                    <!-- 倒计时卡片 -->
+                    <div class="bg-black/75 border border-primary/35 rounded-xl p-4 md:p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="text-sm font-bold text-primary flex items-center">
+                                <i class="fa fa-clock-o mr-2"></i> 公测倒计时
+                            </h4>
+                            <span class="text-[11px] text-light/60">
+                                预计开服：2025-11-20 10:00
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-4 gap-2 text-center">
+                            <div class="bg-black/70 border border-primary/30 rounded-lg py-2">
+                                <div class="text-[10px] tracking-[0.18em] text-light/55 uppercase">Days</div>
+                                <div id="countdown-days" class="mt-1 text-xl md:text-2xl font-bold text-primary text-shadow">
+                                    00
+                                </div>
+                            </div>
+                            <div class="bg-black/70 border border-primary/30 rounded-lg py-2">
+                                <div class="text-[10px] tracking-[0.18em] text-light/55 uppercase">Hours</div>
+                                <div id="countdown-hours" class="mt-1 text-xl md:text-2xl font-bold text-primary text-shadow">
+                                    00
+                                </div>
+                            </div>
+                            <div class="bg-black/70 border border-primary/30 rounded-lg py-2">
+                                <div class="text-[10px] tracking-[0.18em] text-light/55 uppercase">Minutes</div>
+                                <div id="countdown-minutes" class="mt-1 text-xl md:text-2xl font-bold text-primary text-shadow">
+                                    00
+                                </div>
+                            </div>
+                            <div class="bg-black/70 border border-primary/30 rounded-lg py-2">
+                                <div class="text-[10px] tracking-[0.18em] text-light/55 uppercase">Seconds</div>
+                                <div id="countdown-seconds" class="mt-1 text-xl md:text-2xl font-bold text-primary text-shadow">
+                                    00
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="mt-3 text-[11px] text-light/60">
+                            * 到达开服时间后，将自动切换为 <span class="text-green-400 font-semibold">已开服</span> 状态。
+                        </p>
+                    </div>
+
+                    <!-- 下载小提示（简洁版） -->
+                    <div class="bg-black/75 border border-primary/25 rounded-xl p-4 md:p-5 text-[11px] md:text-xs text-light/80 space-y-2">
+                        <div class="flex items-start">
+                            <i class="fa fa-check text-primary mr-2 mt-[2px]"></i>
+                            <span>推荐内存 ≥ 8GB，剩余磁盘空间 ≥ 20GB。</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fa fa-check text-primary mr-2 mt-[2px]"></i>
+                            <span>尽量使用稳定网络（有线或高质量 Wi-Fi）完成下载。</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fa fa-check text-primary mr-2 mt-[2px]"></i>
+                            <span>如被安全软件误报，请添加信任后重新尝试安装。</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- 下载弹窗 -->
-<div id="download-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center hidden">
-    <div class="bg-gray-100 p-8 rounded-lg max-w-md w-full mx-4 shadow-xl">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-2xl font-bold text-primary">下载客户端</h3>
-            <button id="close-modal" class="text-gray-600 hover:text-primary focus:outline-none">
-                <i class="fa fa-times text-xl"></i>
-            </button>
-        </div>
-
-        <div id="download-steps">
-            <!-- 服务器状态检查（约3秒） -->
-            <div id="step-server-check" class="download-step">
-                <div class="text-center mb-6">
-                    <div class="inline-block p-4 rounded-full bg-primary/20 text-primary text-4xl mb-4">
-                        <i class="fa fa-server"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-800 mb-2">服务器状态检查</h4>
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-md">
-                            <span class="text-gray-700">主服务器</span>
-                            <span id="main-server-status" class="flex items-center">
-                <i class="fa fa-circle-o-notch fa-spin mr-2 text-gray-500"></i>
-                <span class="text-gray-500">检查中...</span>
-              </span>
-                        </div>
-                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-md">
-                            <span class="text-gray-700">下载服务器</span>
-                            <span id="download-server-status" class="flex items-center">
-                <i class="fa fa-circle-o-notch fa-spin mr-2 text-gray-500"></i>
-                <span class="text-gray-500">检查中...</span>
-              </span>
-                        </div>
-                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-md">
-                            <span class="text-gray-700">网络连接</span>
-                            <span id="network-status" class="flex items-center">
-                <i class="fa fa-circle-o-notch fa-spin mr-2 text-gray-500"></i>
-                <span class="text-gray-500">检查中...</span>
-              </span>
-                        </div>
-                    </div>
-                    <div class="mt-6">
-                        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-                            <div id="server-check-progress" class="h-full bg-primary" style="width:0%"></div>
-                        </div>
-                        <p id="server-check-message" class="text-gray-600 mt-2 text-sm">正在检查服务器状态...</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 文件信息校验（约3秒） -->
-            <div id="step-file-validation" class="download-step hidden">
-                <div class="text-center mb-6">
-                    <div class="inline-block p-4 rounded-full bg-primary/20 text-primary text-4xl mb-4">
-                        <i class="fa fa-check-square-o"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-800 mb-2">文件信息校验</h4>
-                    <p class="text-gray-600 mb-4" id="validation-file-name">正在获取PC完整版信息...</p>
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-md">
-                            <span class="text-gray-700">文件大小</span>
-                            <span id="validation-file-size" class="text-gray-500">获取中...</span>
-                        </div>
-                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-md">
-                            <span class="text-gray-700">MD5校验</span>
-                            <span id="validation-file-md5" class="text-gray-500">计算中...</span>
-                        </div>
-                        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-md">
-                            <span class="text-gray-700">文件版本</span>
-                            <span id="validation-file-version" class="text-gray-500">获取中...</span>
-                        </div>
-                    </div>
-                    <div class="mt-6">
-                        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-                            <div id="validation-progress" class="h-full bg-primary" style="width:0%"></div>
-                        </div>
-                        <p id="validation-message" class="text-gray-600 mt-2 text-sm">正在校验文件信息...</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 正在下载 -->
-            <div id="step-downloading" class="download-step hidden">
-                <div class="text-center mb-6">
-                    <div class="inline-block p-4 rounded-full bg-primary/20 text-primary text-4xl mb-4">
-                        <i class="fa fa-download"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-800 mb-2">正在下载</h4>
-                    <p class="text-gray-600">下载已开始，请在浏览器的下载栏中查看下载进度</p>
-                    <div class="mt-6">
-                        <button id="open-folder-btn" class="bg-gray-200 text-gray-800 px-6 py-3 rounded-md font-bold hover:bg-gray-300 transition-colors w-full">
-                            <i class="fa fa-folder-open mr-2"></i> 查看下载文件夹
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 错误提示 -->
-            <div id="step-error" class="download-step hidden">
-                <div class="text-center mb-6">
-                    <div class="inline-block p-4 rounded-full bg-red-100 text-red-600 text-4xl mb-4">
-                        <i class="fa fa-exclamation-circle"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-gray-800 mb-2">下载失败</h4>
-                    <p class="text-gray-600 mb-4" id="error-message">服务器连接失败，请稍后再试</p>
-                    <div class="mt-6">
-                        <button id="retry-download" class="bg-primary text-white px-6 py-3 rounded-md font-bold hover:bg-primary/90 transition-colors">
-                            <i class="fa fa-refresh mr-2"></i> 重试
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
-
 <!-- 页脚 -->
 <footer class="bg-black py-8 border-t border-primary/30">
     <div class="container mx-auto px-4">
         <div class="text-center">
-            <p class="text-light">© 2025 梦想传奇3 版权所有 | 梦想运营团队</p>
+            <p class="text-light">© 2025 梦想传奇3 版权所有 | 京ICP备12345678号</p>
             <p class="text-light mt-4 text-sm">本游戏适合16岁以上玩家进入 | 抵制不良游戏 拒绝盗版游戏 | 注意自我保护 谨防受骗上当 | 适度游戏益脑 沉迷游戏伤身 | 合理安排时间 享受健康生活</p>
         </div>
     </div>
@@ -610,11 +934,383 @@
     <i class="fa fa-arrow-up"></i>
 </button>
 
-<!-- JavaScript 文件 -->
-<script src="news.js"></script>
-<script src="screenshot-viewer.js"></script>
-<script src="download.js"></script>
-<script src="main.js"></script>
+<script>
+    // 页面初始化
+    document.addEventListener('DOMContentLoaded', function() {
+        initParticles();
+        initScrollAnimations();
+        initMobileMenu();
+        initBackToTop();
+        initSmoothScroll();
+        initDownloadFunctionality();
+        initNotification();
+        initCountdown();
+    });
+
+    // 顶部通知区域控制
+    function initNotification() {
+        const notification = document.getElementById('top-notification');
+        const closeBtn = document.getElementById('notification-close');
+
+        // 检查用户是否在24小时内关闭过通知
+        checkNotificationStatus();
+
+        // 如果没有关闭过，显示通知
+        if (!localStorage.getItem('notificationClosed')) {
+            showNotification();
+        }
+
+        // 关闭按钮点击事件
+        closeBtn.addEventListener('click', function() {
+            hideNotification();
+            // 记录用户已关闭通知，24小时内不再显示
+            localStorage.setItem('notificationClosed', 'true');
+            localStorage.setItem('notificationClosedTime', Date.now().toString());
+        });
+    }
+
+    // 显示通知
+    function showNotification() {
+        const notification = document.getElementById('top-notification');
+        notification.classList.add('show');
+        // 调整导航栏位置
+        document.querySelector('nav').style.top = '60px';
+    }
+
+    // 隐藏通知
+    function hideNotification() {
+        const notification = document.getElementById('top-notification');
+        notification.classList.remove('show');
+        // 恢复导航栏位置
+        document.querySelector('nav').style.top = '0';
+    }
+
+    // 检查通知状态
+    function checkNotificationStatus() {
+        const isClosed = localStorage.getItem('notificationClosed');
+        const closedTime = localStorage.getItem('notificationClosedTime');
+
+        if (isClosed === 'true' && closedTime) {
+            const now = Date.now();
+            const closedTimeMs = parseInt(closedTime);
+            const oneDayMs = 24 * 60 * 60 * 1000; // 24小时
+
+            // 如果超过24小时，重新显示通知
+            if (now - closedTimeMs > oneDayMs) {
+                localStorage.removeItem('notificationClosed');
+                localStorage.removeItem('notificationClosedTime');
+                showNotification();
+            } else {
+                hideNotification();
+            }
+        }
+    }
+
+    // 手动控制通知显示/隐藏的函数（可在控制台调用）
+    window.toggleNotification = function() {
+        const notification = document.getElementById('top-notification');
+        if (notification.classList.contains('show')) {
+            hideNotification();
+        } else {
+            showNotification();
+        }
+    }
+
+    // 重置通知状态（可在控制台调用）
+    window.resetNotification = function() {
+        localStorage.removeItem('notificationClosed');
+        localStorage.removeItem('notificationClosedTime');
+        showNotification();
+        console.log('通知状态已重置');
+    };
+
+    // 粒子
+    function initParticles(){
+        particlesJS('particles-js',{
+            particles:{
+                number:{ value:80, density:{enable:true,value_area:800}},
+                color:{ value:'#D4AF37'},
+                shape:{ type:'circle', stroke:{width:0,color:'#000'}},
+                opacity:{ value:.35, random:false },
+                size:{ value:2.6, random:true },
+                line_linked:{ enable:true, distance:150, color:'#D4AF37', opacity:.2, width:1 },
+                move:{ enable:true, speed:1, direction:'none', random:false, straight:false, out_mode:'out', bounce:false }
+            },
+            interactivity:{
+                detect_on:'canvas',
+                events:{ onhover:{enable:true,mode:'grab'}, onclick:{enable:true,mode:'push'}, resize:true },
+                modes:{ grab:{distance:140,line_linked:{opacity:.5}}, push:{particles_nb:3} }
+            },
+            retina_detect:true
+        });
+    }
+
+    // 渐显
+    function initScrollAnimations(){
+        const els = document.querySelectorAll('.fade-in');
+        const obs = new IntersectionObserver((entries)=>{
+            entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('active'); } });
+        },{threshold:.1});
+        els.forEach(el=>obs.observe(el));
+    }
+
+    // 移动端菜单
+    function initMobileMenu(){
+        const toggle = document.getElementById('menu-toggle');
+        const closeBtn = document.getElementById('close-menu');
+        const menu = document.getElementById('mobile-menu');
+        const links = document.querySelectorAll('.mobile-nav-link');
+        toggle.addEventListener('click', ()=> menu.classList.add('active'));
+        closeBtn.addEventListener('click', ()=> menu.classList.remove('active'));
+        links.forEach(l=> l.addEventListener('click', ()=> menu.classList.remove('active')));
+    }
+
+    // 返回顶部
+    function initBackToTop(){
+        const btn = document.getElementById('back-to-top');
+        window.addEventListener('scroll', ()=>{
+            if(window.pageYOffset>300){ btn.classList.remove('opacity-0','invisible'); btn.classList.add('opacity-100','visible'); }
+            else { btn.classList.remove('opacity-100','visible'); btn.classList.add('opacity-0','invisible'); }
+        });
+        btn.addEventListener('click', ()=> window.scrollTo({top:0,behavior:'smooth'}));
+    }
+
+    // 平滑滚动
+    function initSmoothScroll(){
+        document.querySelectorAll('.nav-link').forEach(a=>{
+            a.addEventListener('click', e=>{
+                e.preventDefault();
+                const id = a.getAttribute('href');
+                const el = document.querySelector(id);
+                if(el){ window.scrollTo({ top: el.offsetTop - 80, behavior:'smooth' }); }
+            });
+        });
+    }
+
+    // 下载流程（3秒服务器检测 + 3秒文件校验；查看下载文件夹=仅提示）
+    function initDownloadFunctionality(){
+        const btn1 = document.getElementById('download-btn-1');
+        const btn2 = document.getElementById('download-btn-2');
+        const modal = document.getElementById('download-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+
+        const stepServer = document.getElementById('step-server-check');
+        const stepValidate = document.getElementById('step-file-validation');
+        const stepDownloading = document.getElementById('step-downloading');
+        const stepError = document.getElementById('step-error');
+
+        const mainServerStatus = document.getElementById('main-server-status');
+        const downloadServerStatus = document.getElementById('download-server-status');
+        const networkStatus = document.getElementById('network-status');
+        const serverBar = document.getElementById('server-check-progress');
+        const serverMsg = document.getElementById('server-check-message');
+
+        const vName = document.getElementById('validation-file-name');
+        const vSize = document.getElementById('validation-file-size');
+        const vMd5 = document.getElementById('validation-file-md5');
+        const vVer = document.getElementById('validation-file-version');
+        const vBar = document.getElementById('validation-progress');
+        const vMsg = document.getElementById('validation-message');
+
+        const errMsg = document.getElementById('error-message');
+        const retryBtn = document.getElementById('retry-download');
+        const openFolderBtn = document.getElementById('open-folder-btn');
+
+        const config = {
+            full: {
+                name:'PC完整版',
+                sizeText:'3.2GB',
+                md5:'8f434346648f6b96df89dda901c5176b',
+                version:'v1.0.2',
+                url:'https://dlink.host/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3UvYy9hOGRiOGExOGY3YmE2OWM1L0VlT1Rzd0VkRHloTWl1WUlNUTRLeGlrQmNwV0E2bmtTdWM1eWk0QTNHM21JbUE_ZT1McVJTMmI.zz'
+            }
+        };
+        let current = config.full;
+
+        function show(step){ step.classList.remove('hidden'); }
+        function hide(step){ step.classList.add('hidden'); }
+        function reset(){
+            hide(stepValidate); hide(stepDownloading); hide(stepError);
+            mainServerStatus.innerHTML = '<i class="fa fa-circle-o-notch fa-spin mr-2 text-gray-500"></i><span class="text-gray-500">检查中...</span>';
+            downloadServerStatus.innerHTML = '<i class="fa fa-circle-o-notch fa-spin mr-2 text-gray-500"></i><span class="text-gray-500">检查中...</span>';
+            networkStatus.innerHTML = '<i class="fa fa-circle-o-notch fa-spin mr-2 text-gray-500"></i><span class="text-gray-500">检查中...</span>';
+            serverBar.style.width='0%'; serverMsg.textContent='正在检查服务器状态...';
+
+            vName.textContent=`正在获取${current.name}信息...`;
+            vSize.textContent='获取中...'; vMd5.textContent='计算中...'; vVer.textContent='获取中...';
+            vBar.style.width='0%'; vMsg.textContent='正在校验文件信息...';
+        }
+
+        function updateStatus(el, type, text){
+            const icon = document.createElement('i'); const span = document.createElement('span');
+            el.innerHTML = '';
+            if(type==='success'){ icon.className='fa fa-check-circle mr-2 text-green-500'; span.className='text-green-500'; }
+            else if(type==='warning'){ icon.className='fa fa-exclamation-circle mr-2 text-yellow-500'; span.className='text-yellow-500'; }
+            else { icon.className='fa fa-times-circle mr-2 text-red-500'; span.className='text-red-500'; }
+            span.textContent = text; el.appendChild(icon); el.appendChild(span);
+        }
+
+        function startServerCheck(){
+            show(stepServer);
+            let p = 0;
+            const timer = setInterval(()=>{
+                p += 1; // 100 * 30ms = ~3000ms
+                serverBar.style.width = p + '%';
+                if(p===20){ serverMsg.textContent='正在连接主服务器...'; }
+                if(p===40){ updateStatus(mainServerStatus,'success','在线'); serverMsg.textContent='正在连接下载服务器...'; }
+                if(p===60){ updateStatus(downloadServerStatus,'success','在线'); serverMsg.textContent='正在测试网络连接...'; }
+                if(p===80){ updateStatus(networkStatus,'success','良好'); serverMsg.textContent='正在完成检查...'; }
+                if(p>=100){
+                    clearInterval(timer);
+                    serverMsg.textContent='服务器状态检查完成';
+                    setTimeout(()=>{
+                        if(Math.random()<0.10){
+                            hide(stepServer); show(stepError);
+                            errMsg.textContent='下载服务器正在维护中，请稍后再试';
+                        }else{
+                            startValidation();
+                        }
+                    },300);
+                }
+            },30);
+        }
+
+        function startValidation(){
+            hide(stepServer); show(stepValidate);
+            vName.textContent=`正在获取${current.name}信息...`;
+            let p = 0;
+            const timer = setInterval(()=>{
+                p += 1; // ~3s
+                vBar.style.width = p + '%';
+                if(p===30){ vSize.textContent=current.sizeText; vMsg.textContent='正在校验文件完整性...'; }
+                if(p===60){ vMd5.textContent=current.md5; vMsg.textContent='正在检查文件版本...'; }
+                if(p===90){ vVer.textContent=current.version; vMsg.textContent='正在完成验证...'; }
+                if(p>=100){
+                    clearInterval(timer);
+                    vMsg.textContent='文件验证完成';
+                    setTimeout(()=>{
+                        if(Math.random()<0.05){
+                            hide(stepValidate); show(stepError);
+                            errMsg.textContent='文件校验失败，可能已损坏';
+                        }else{
+                            startDownload();
+                        }
+                    },300);
+                }
+            },30);
+        }
+
+        function startDownload(){
+            hide(stepValidate); show(stepDownloading);
+            setTimeout(()=>{
+                const a = document.createElement('a');
+                a.href = current.url;
+                a.download = `梦想传奇3_${current.name}_${current.version}.exe`;
+                a.style.display='none';
+                document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            },500);
+        }
+
+        // 仅提示版本：不打开 about:downloads
+        openFolderBtn.addEventListener('click', function(){
+            alert('提示：请在浏览器的“下载”页面查看进度或打开下载文件。\n\n常见方式：\n• Windows/Linux：Ctrl + J\n• macOS（Chrome/Edge）：Command + J\n• Safari：点击顶部菜单 “显示” → “显示下载”');
+        });
+
+        retryBtn.addEventListener('click', ()=>{
+            hide(stepValidate); hide(stepDownloading); hide(stepError);
+            show(stepServer); reset(); startServerCheck();
+        });
+
+        function openModal(){
+            modal.classList.remove('hidden'); reset(); show(stepServer); startServerCheck();
+        }
+        function closeModal(){ modal.classList.add('hidden'); }
+
+        closeModalBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', e=>{ if(e.target===modal){ closeModal(); }});
+        document.addEventListener('keydown', e=>{ if(e.key==='Escape' && !modal.classList.contains('hidden')) closeModal(); });
+
+        if (btn1) {
+            btn1.addEventListener('click', ()=>{ current = config.full; openModal(); });
+        }
+        if (btn2) {
+            btn2.addEventListener('click', ()=>{ current = config.full; openModal(); });
+        }
+    }
+
+    // 倒计时功能
+    function initCountdown() {
+        // 设置目标日期（开服时间）- 固定为2025年11月20日10:00
+        const targetDate = new Date(2025, 10, 20, 10, 0, 0); // 月份是0-based，10表示11月
+
+        // 获取倒计时元素
+        const daysEl = document.getElementById('countdown-days');
+        const hoursEl = document.getElementById('countdown-hours');
+        const minutesEl = document.getElementById('countdown-minutes');
+        const secondsEl = document.getElementById('countdown-seconds');
+
+        if (!daysEl || !hoursEl || !minutesEl || !secondsEl) {
+            console.warn('倒计时元素未找到');
+            return;
+        }
+
+        function updateCountdown() {
+            const now = new Date();
+            const diff = targetDate - now;
+
+            if (diff <= 0) {
+                // 倒计时结束
+                daysEl.textContent = '00';
+                hoursEl.textContent = '00';
+                minutesEl.textContent = '00';
+                secondsEl.textContent = '00';
+
+                // 添加已开服样式
+                daysEl.parentElement.innerHTML = `
+                    <div class="text-3xl font-bold text-green-500">已开服</div>
+                `;
+                hoursEl.parentElement.style.display = 'none';
+                minutesEl.parentElement.style.display = 'none';
+                secondsEl.parentElement.style.display = 'none';
+
+                return;
+            }
+
+            // 计算天、时、分、秒
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            // 更新DOM
+            daysEl.textContent = days.toString().padStart(2, '0');
+            hoursEl.textContent = hours.toString().padStart(2, '0');
+            minutesEl.textContent = minutes.toString().padStart(2, '0');
+            secondsEl.textContent = seconds.toString().padStart(2, '0');
+
+            // 数字变化动画
+            daysEl.classList.add('countdown-change');
+            hoursEl.classList.add('countdown-change');
+            minutesEl.classList.add('countdown-change');
+            secondsEl.classList.add('countdown-change');
+
+            setTimeout(() => {
+                daysEl.classList.remove('countdown-change');
+                hoursEl.classList.remove('countdown-change');
+                minutesEl.classList.remove('countdown-change');
+                secondsEl.classList.remove('countdown-change');
+            }, 500);
+        }
+
+        // 初始更新
+        updateCountdown();
+
+        // 每秒更新一次
+        setInterval(updateCountdown, 1000);
+
+        console.log('倒计时功能已初始化，目标日期:', targetDate);
+    }
+</script>
 
 </body>
 </html>
